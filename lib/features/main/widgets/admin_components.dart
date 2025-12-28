@@ -452,3 +452,154 @@ class MiniDonutChart extends CustomPainter {
   @override
   bool shouldRepaint(_) => false;
 }
+
+/// Teknisi data card untuk menampilkan informasi teknisi
+class TeknisiCard extends StatelessWidget {
+  final String name;
+  final String email;
+  final String? phone;
+  final String? areaKerja;
+  final List<String> roles;
+  final VoidCallback? onTap;
+
+  const TeknisiCard({
+    super.key,
+    required this.name,
+    required this.email,
+    this.phone,
+    this.areaKerja,
+    required this.roles,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [kCyan, Color.fromARGB(255, 129, 140, 248)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.engineering,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: kTextPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        email,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: kTextSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (phone != null) ...[
+              Row(
+                children: [
+                  Icon(Icons.phone, size: 16, color: kCyan),
+                  const SizedBox(width: 8),
+                  Text(
+                    phone!,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: kTextSecondary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+            ],
+            if (areaKerja != null) ...[
+              Row(
+                children: [
+                  Icon(Icons.location_on, size: 16, color: kLime),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      areaKerja!,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: kTextSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+            ],
+            if (roles.isNotEmpty) ...[
+              Wrap(
+                spacing: 4,
+                children: roles.take(2).map((role) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: kIndigo.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      role.toLowerCase(),
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: kIndigo,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}

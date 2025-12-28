@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/providers/auth_provider.dart';
-import 'admin/admin_home.dart';
-import 'user/user_home.dart';
-import 'widgets/main_app_bar.dart';
+import 'pages/admin/dashboard/admin_dashboard_page.dart';
+import 'pages/admin/gangguan/admin_gangguan_page.dart';
+import 'pages/admin/teknisi/admin_teknisi_page.dart';
+import 'pages/admin/setting/admin_setting_page.dart';
+import 'pages/teknisi/dashboard/teknisi_dashboard_page.dart';
+import 'pages/teknisi/gangguan/teknisi_gangguan_page.dart';
+import 'pages/teknisi/map/teknisi_map_page.dart';
+import 'pages/teknisi/akun/teknisi_akun_page.dart';
 import 'widgets/main_bottom_nav.dart';
-import 'widgets/main_header.dart';
 
-/// MainShell is the primary app layout that contains AppBar, BottomNav,
+/// MainShell is the primary app layout that contains BottomNav,
 /// and area for main pages like Dashboard, Tasks, Profile.
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -19,52 +23,48 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
-  static const List<String> _titles = ['Dashboard', 'Tasks', 'Profile'];
-
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
 
+    // Titles vary by role
+    final titles = auth.role == 'admin'
+        ? ['Dashboard', 'Gangguan', 'Teknisi', 'Setting']
+        : ['Dashboard', 'Gangguan', 'Map', 'Akun'];
+
+    // Ensure we use a safe index for UI elements (avoid RangeError when role changes)
+    final int safeIndex = _currentIndex >= titles.length
+        ? titles.length - 1
+        : _currentIndex;
+
     Widget body;
-    switch (_currentIndex) {
+    switch (safeIndex) {
       case 1:
-        body = const Center(child: Text('Tasks page (placeholder)'));
+        body = auth.role == 'admin'
+            ? const AdminGangguanPage()
+            : const TeknisiGangguanPage();
         break;
       case 2:
-        body = Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Role: ${auth.role}'),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: () async {
-                  await auth.logout();
-                },
-                child: const Text('Logout'),
-              ),
-            ],
-          ),
-        );
+        body = auth.role == 'admin'
+            ? const AdminTeknisiPage()
+            : const TeknisiMapPage();
+        break;
+      case 3:
+        body = auth.role == 'admin'
+            ? const AdminSettingPage()
+            : const TeknisiAkunPage();
         break;
       case 0:
       default:
-        // Dashboard: role-aware content
-        body = auth.role == 'admin' ? const AdminHome() : const UserHome();
+        body = auth.role == 'admin'
+            ? const AdminDashboardPage()
+            : const TeknisiDashboardPage();
     }
 
     return Scaffold(
-      appBar: MainAppBar(title: _titles[_currentIndex]),
-      body: SafeArea(
-        child: Column(
-          children: [
-            MainHeader(title: _titles[_currentIndex], subtitle: auth.role),
-            Expanded(child: body),
-          ],
-        ),
-      ),
+      body: body,
       bottomNavigationBar: MainBottomNav(
-        currentIndex: _currentIndex,
+        currentIndex: safeIndex,
         onTap: (i) => setState(() => _currentIndex = i),
       ),
     );

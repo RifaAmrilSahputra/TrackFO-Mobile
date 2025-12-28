@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/admin_components.dart';
+import '../../../widgets/admin_components.dart';
 
 /// Simple responsive grid wrapper to avoid horizontal overflow on small screens.
 class ResponsiveGrid extends StatelessWidget {
@@ -42,8 +42,8 @@ class ResponsiveGrid extends StatelessWidget {
   }
 }
 
-class AdminHome extends StatelessWidget {
-  const AdminHome({super.key});
+class AdminDashboardPage extends StatelessWidget {
+  const AdminDashboardPage({super.key});
 
   static const Color bg = Color(0xFFF8FAFF);
   static const Color indigo = Color(0xFF4F46E5);

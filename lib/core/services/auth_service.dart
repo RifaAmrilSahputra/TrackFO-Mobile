@@ -22,7 +22,7 @@ class AuthService {
   }
 
   /// Logs in against the Node backend and returns a normalized map:
-  /// { 'token': String, 'user': { 'role': 'admin'|'user', ... } }
+  /// { 'token': String, 'user': { 'role': 'admin'|'teknisi', ... } }
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final res = await _dio.post(
@@ -45,7 +45,7 @@ class AuthService {
       }
 
       // backend returns roles as array of uppercase names, choose primary role
-      String role = 'user';
+      String role = 'teknisi';
       final roles = user['roles'];
       if (roles is List && roles.isNotEmpty) {
         final rolesUpper = roles
@@ -88,6 +88,37 @@ class AuthService {
       }
 
       throw Exception(message);
+    }
+  }
+
+  /// Logs out by calling backend endpoint and invalidate token on server
+  /// Returns true if backend logout successful, false if failed
+  Future<bool> logout(String token) async {
+    try {
+      final res = await _dio.post(
+        '/auth/logout',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      final data = res.data;
+      
+      // Backend should return success status
+      if (data is Map && data.containsKey('success')) {
+        return data['success'] == true;
+      }
+      
+      // If no success field, assume success for 2xx responses
+      return true;
+    } on DioException catch (e) {
+      // Log logout attempt failure for debugging
+      print('Backend logout failed: ${e.message}');
+      
+      // Don't throw exception for logout failures - we want to continue with local cleanup
+      return false;
     }
   }
 }

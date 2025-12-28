@@ -44,7 +44,7 @@ class MainHeader extends StatelessWidget {
             child: CircleAvatar(
               radius: 16,
               backgroundColor: theme.colorScheme.primary,
-              child: const Icon(Icons.person, color: Colors.white),
+              child: const Icon(Icons.person, color: Color.fromARGB(255, 167, 22, 22)),
             ),
           ),
         ],
