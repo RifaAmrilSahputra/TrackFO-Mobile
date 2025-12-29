@@ -113,10 +113,8 @@ class AuthService {
       
       // If no success field, assume success for 2xx responses
       return true;
-    } on DioException catch (e) {
-      // Log logout attempt failure for debugging
-      print('Backend logout failed: ${e.message}');
-      
+    } on DioException catch (_) {
+      // Handle logout attempt failure
       // Don't throw exception for logout failures - we want to continue with local cleanup
       return false;
     }

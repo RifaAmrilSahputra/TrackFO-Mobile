@@ -9,10 +9,14 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Debug: Orange background for App level
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
-      home: const AuthGate(),
+      home: Container(
+        color: Colors.orange,
+        child: const AuthGate(),
+      ),
     );
   }
 }

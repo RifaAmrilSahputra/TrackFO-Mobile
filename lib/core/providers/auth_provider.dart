@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../../core/storage/secure_storage.dart';
 import '../../core/services/auth_service.dart';
 
@@ -7,7 +8,7 @@ import '../../core/services/auth_service.dart';
 /// - `isAuthenticated` reflects presence of a token.
 class AuthProvider extends ChangeNotifier {
   String? _token;
-  String _role = 'teknisi';
+  String _role = '';
   bool _isLoading = true;
   bool _isLoggingOut = false;
 
@@ -24,7 +25,7 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isLoggingOut => _isLoggingOut;
 
-  bool get isAuthenticated => _token != null;
+  bool get isAuthenticated => _token != null && _token!.isNotEmpty;
 
   /// Initialize provider by loading existing token/role from secure storage
   Future<void> loadFromStorage() async {
@@ -34,14 +35,17 @@ class AuthProvider extends ChangeNotifier {
       final t = await SecureStorage.getToken();
       final r = await SecureStorage.getRole();
       _token = t;
-      _role = r ?? 'teknisi';
-    } catch (_) {
+      _role = (r != null && r.isNotEmpty) ? r : ''; // Don't default to 'teknisi'
+    } catch (e) {
       _token = null;
-      _role = 'teknisi';
+      _role = '';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-    _isLoading = false;
-    notifyListeners();
   }
+
+
 
   /// Persist token and role and update state
   Future<void> setAuth({required String token, required String role}) async {
@@ -61,22 +65,25 @@ class AuthProvider extends ChangeNotifier {
       if (_token != null) {
         final backendSuccess = await _authService.logout(_token!);
         if (backendSuccess) {
-          print('Backend logout successful');
+          // Backend logout successful
         } else {
-          print('Backend logout failed, but continuing with local cleanup');
+          // Backend logout failed, but continuing with local cleanup
         }
       }
     } catch (e) {
-      // Log any unexpected errors during backend logout
-      print('Error during backend logout: $e');
+      // Handle unexpected errors during backend logout
     } finally {
       // Step 2: Always cleanup local data regardless of backend success
       _token = null;
-      _role = 'teknisi';
+      _role = ''; // Clear role completely after logout
       await SecureStorage.logout();
-      
+
       _isLoggingOut = false;
+      // Logout completed - auth state cleared, role reset to empty
       notifyListeners();
+      
+      // Step 3: Force navigation to login - small delay to ensure state propagation
+      await Future.delayed(const Duration(milliseconds: 100));
     }
   }
 }

@@ -56,6 +56,11 @@ class MainBottomNav extends StatelessWidget {
       ),
     ];
 
+    // Handle empty role case - return empty widget for unauthenticated users
+    if (role.isEmpty) {
+      return const SizedBox.shrink(); // Return empty widget to prevent showing navigation
+    }
+
     final items = role == 'admin' ? adminItems : teknisiItems;
 
     return BottomNavigationBar(

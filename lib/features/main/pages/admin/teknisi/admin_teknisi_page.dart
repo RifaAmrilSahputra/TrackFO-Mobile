@@ -1326,7 +1326,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      '${_formatShortDate(teknisi.createdAt)}',
+                      _formatShortDate(teknisi.createdAt),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: kTextSecondary.withValues(alpha: 0.7),
                         fontSize: 8,

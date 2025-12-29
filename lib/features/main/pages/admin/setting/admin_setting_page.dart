@@ -13,7 +13,6 @@ class AdminSettingPage extends StatefulWidget {
 class _AdminSettingPageState extends State<AdminSettingPage> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final auth = context.watch<AuthProvider>();
     
     return Scaffold(
@@ -132,7 +131,7 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
               border: Border.all(color: kIndigo.withValues(alpha: 0.3)),
             ),
             child: Text(
-              '${auth.role ?? 'Administrator'}',
+              auth.role,
               style: TextStyle(
                 color: kIndigo,
                 fontWeight: FontWeight.w600,
@@ -166,8 +165,6 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
   }
 
   Widget _buildSettingsSection(BuildContext context) {
-    final theme = Theme.of(context);
-    
     return _buildSectionCard(
       context,
       title: 'Pengaturan Aplikasi',
@@ -183,7 +180,7 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
           trailing: Switch(
             value: true,
             onChanged: (value) {},
-            activeColor: kCyan,
+            activeThumbColor: kCyan,
           ),
         ),
         _buildSettingTile(
@@ -207,8 +204,6 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
   }
 
   Widget _buildAccountSection(BuildContext context, AuthProvider auth) {
-    final theme = Theme.of(context);
-    
     return _buildSectionCard(
       context,
       title: 'Manajemen Akun',
@@ -260,7 +255,7 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
           trailing: Switch(
             value: false,
             onChanged: (value) {},
-            activeColor: kAmber,
+            activeThumbColor: kAmber,
           ),
         ),
         _buildSettingTile(
@@ -321,7 +316,7 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
 
   Widget _buildLogoutSection(BuildContext context, AuthProvider auth) {
     final theme = Theme.of(context);
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -641,44 +636,79 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
   }
 
   Future<void> _performLogout(BuildContext context, AuthProvider auth) async {
+    if (!mounted) return; // Check if widget is still mounted
+    
+    // Get messenger before any async operations
+    final messenger = ScaffoldMessenger.of(context);
+    
     try {
+      // Show loading indicator
+      if (mounted) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Text('Memproses logout...'),
+              ],
+            ),
+            duration: Duration(seconds: 2),
+            backgroundColor: kCyan,
+          ),
+        );
+      }
+      
       await auth.logout();
       
       // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 8),
-              const Text('Berhasil logout dari admin panel'),
-            ],
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 8),
+                const Text('Berhasil logout dari admin panel'),
+              ],
+            ),
+            backgroundColor: kLime,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
-          backgroundColor: kLime,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      );
+        );
+      }
+      
+      // Let AuthGate handle navigation automatically based on auth state change
     } catch (e) {
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error, color: Colors.white),
-              const SizedBox(width: 8),
-              Text('Error saat logout: $e'),
-            ],
+      // Show error message only if still mounted
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error, color: Colors.white),
+                const SizedBox(width: 8),
+                Text('Error saat logout: $e'),
+              ],
+            ),
+            backgroundColor: kRose,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
-          backgroundColor: kRose,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      );
+        );
+      }
     }
   }
 }

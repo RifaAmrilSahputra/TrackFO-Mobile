@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/providers/auth_provider.dart';
 
-class TeknisiAkunPage extends StatelessWidget {
+class TeknisiAkunPage extends StatefulWidget {
   const TeknisiAkunPage({super.key});
 
+  @override
+  State<TeknisiAkunPage> createState() => _TeknisiAkunPageState();
+}
+
+class _TeknisiAkunPageState extends State<TeknisiAkunPage> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
@@ -73,24 +78,59 @@ class TeknisiAkunPage extends StatelessWidget {
   }
 
   Future<void> _performLogout(BuildContext context, AuthProvider auth) async {
+    if (!mounted) return; // Check if widget is still mounted
+    
+    // Get messenger before any async operations
+    final messenger = ScaffoldMessenger.of(context);
+    
     try {
+      // Show loading indicator
+      if (mounted) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Text('Memproses logout...'),
+              ],
+            ),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.blue,
+          ),
+        );
+      }
+      
       await auth.logout();
       
       // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Berhasil logout'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      if (mounted) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Berhasil logout'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+      
+      // Let AuthGate handle navigation automatically based on auth state change
     } catch (e) {
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error saat logout: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      // Show error message only if still mounted
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('Error saat logout: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 }

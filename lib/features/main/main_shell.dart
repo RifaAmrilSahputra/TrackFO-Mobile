@@ -27,6 +27,16 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
 
+    // CRITICAL: If not authenticated, don't show MainShell content
+    if (!auth.isAuthenticated) {
+      return const SizedBox.shrink(); // Return empty widget
+    }
+
+    // CRITICAL: If role is empty, don't show MainShell content
+    if (auth.role.isEmpty) {
+      return const SizedBox.shrink(); // Return empty widget
+    }
+
     // Titles vary by role
     final titles = auth.role == 'admin'
         ? ['Dashboard', 'Gangguan', 'Teknisi', 'Setting']
