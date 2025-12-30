@@ -16,15 +16,17 @@ class AuthGate extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
 
-    // Check all conditions explicitly
+    // Show splash screen during loading or logging out
     if (auth.isLoading || auth.isLoggingOut) {
       return const SplashScreen();
     }
 
+    // Show login page if not authenticated
     if (!auth.isAuthenticated || auth.role.isEmpty) {
       return const LoginPage();
     }
 
+    // Show main shell for authenticated users
     return const MainShell();
   }
 }
