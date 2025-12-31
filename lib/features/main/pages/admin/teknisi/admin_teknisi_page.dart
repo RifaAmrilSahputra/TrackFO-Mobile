@@ -201,7 +201,6 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // TODO: Implement delete functionality
             },
             style: ElevatedButton.styleFrom(backgroundColor: kRose),
             child: const Text('Hapus', style: TextStyle(color: Colors.white)),
@@ -305,7 +304,10 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                   children: [
                     // Enhanced Statistics Cards
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -399,7 +401,10 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
 
                     // Search and Filter Section
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -468,7 +473,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                               final screenWidth = constraints.maxWidth;
                               final isVeryNarrow = screenWidth < 350;
                               final isNarrow = screenWidth < 450;
-                              
+
                               if (isVeryNarrow) {
                                 // Stack vertically on very narrow screens
                                 return Column(
@@ -507,7 +512,10 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         items: [
                                           const DropdownMenuItem(
                                             value: 'Semua',
-                                            child: Text('Semua', style: TextStyle(fontSize: 9)),
+                                            child: Text(
+                                              'Semua',
+                                              style: TextStyle(fontSize: 9),
+                                            ),
                                           ),
                                           ...uniqueAreas.map(
                                             (area) => DropdownMenuItem(
@@ -515,11 +523,14 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                               child: SizedBox(
                                                 width: 80,
                                                 child: Text(
-                                                  area.length > 10 
+                                                  area.length > 10
                                                       ? '${area.substring(0, 8)}...'
                                                       : area,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: const TextStyle(fontSize: 9),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontSize: 9,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -565,19 +576,31 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         items: const [
                                           DropdownMenuItem(
                                             value: 'Nama',
-                                            child: Text('Nama', style: TextStyle(fontSize: 9)),
+                                            child: Text(
+                                              'Nama',
+                                              style: TextStyle(fontSize: 9),
+                                            ),
                                           ),
                                           DropdownMenuItem(
                                             value: 'Area',
-                                            child: Text('Area', style: TextStyle(fontSize: 9)),
+                                            child: Text(
+                                              'Area',
+                                              style: TextStyle(fontSize: 9),
+                                            ),
                                           ),
                                           DropdownMenuItem(
                                             value: 'Email',
-                                            child: Text('Email', style: TextStyle(fontSize: 9)),
+                                            child: Text(
+                                              'Email',
+                                              style: TextStyle(fontSize: 9),
+                                            ),
                                           ),
                                           DropdownMenuItem(
                                             value: 'Tanggal',
-                                            child: Text('Tgl', style: TextStyle(fontSize: 9)),
+                                            child: Text(
+                                              'Tgl',
+                                              style: TextStyle(fontSize: 9),
+                                            ),
                                           ),
                                         ],
                                         onChanged: (value) =>
@@ -623,7 +646,10 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         items: [
                                           const DropdownMenuItem(
                                             value: 'Semua',
-                                            child: Text('Semua', style: TextStyle(fontSize: 10)),
+                                            child: Text(
+                                              'Semua',
+                                              style: TextStyle(fontSize: 10),
+                                            ),
                                           ),
                                           ...uniqueAreas.map(
                                             (area) => DropdownMenuItem(
@@ -631,11 +657,14 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                               child: SizedBox(
                                                 width: 90,
                                                 child: Text(
-                                                  area.length > 10 
+                                                  area.length > 10
                                                       ? '${area.substring(0, 8)}...'
                                                       : area,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: const TextStyle(fontSize: 9),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontSize: 9,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -680,19 +709,31 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         items: const [
                                           DropdownMenuItem(
                                             value: 'Nama',
-                                            child: Text('Nama', style: TextStyle(fontSize: 10)),
+                                            child: Text(
+                                              'Nama',
+                                              style: TextStyle(fontSize: 10),
+                                            ),
                                           ),
                                           DropdownMenuItem(
                                             value: 'Area',
-                                            child: Text('Area', style: TextStyle(fontSize: 10)),
+                                            child: Text(
+                                              'Area',
+                                              style: TextStyle(fontSize: 10),
+                                            ),
                                           ),
                                           DropdownMenuItem(
                                             value: 'Email',
-                                            child: Text('Email', style: TextStyle(fontSize: 10)),
+                                            child: Text(
+                                              'Email',
+                                              style: TextStyle(fontSize: 10),
+                                            ),
                                           ),
                                           DropdownMenuItem(
                                             value: 'Tanggal',
-                                            child: Text('Tanggal', style: TextStyle(fontSize: 10)),
+                                            child: Text(
+                                              'Tanggal',
+                                              style: TextStyle(fontSize: 10),
+                                            ),
                                           ),
                                         ],
                                         onChanged: (value) =>
@@ -713,7 +754,9 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: kBg,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                           border: Border.all(
                                             color: kLime.withValues(alpha: 0.3),
                                           ),
@@ -728,14 +771,18 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                               size: 14,
                                             ),
                                             hintText: 'Filter Area',
-                                            contentPadding: EdgeInsets.symmetric(
-                                              vertical: 4,
-                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                  vertical: 4,
+                                                ),
                                           ),
                                           items: [
                                             const DropdownMenuItem(
                                               value: 'Semua',
-                                              child: Text('Semua Area', style: TextStyle(fontSize: 10)),
+                                              child: Text(
+                                                'Semua Area',
+                                                style: TextStyle(fontSize: 10),
+                                              ),
                                             ),
                                             ...uniqueAreas.map(
                                               (area) => DropdownMenuItem(
@@ -743,18 +790,23 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                                 child: SizedBox(
                                                   width: 90,
                                                   child: Text(
-                                                    area.length > 12 
+                                                    area.length > 12
                                                         ? '${area.substring(0, 10)}...'
                                                         : area,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: const TextStyle(fontSize: 9),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                      fontSize: 9,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ],
                                           onChanged: (value) =>
-                                              _onFilterChanged(value ?? 'Semua'),
+                                              _onFilterChanged(
+                                                value ?? 'Semua',
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -768,9 +820,13 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: kBg,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                           border: Border.all(
-                                            color: kAmber.withValues(alpha: 0.3),
+                                            color: kAmber.withValues(
+                                              alpha: 0.3,
+                                            ),
                                           ),
                                         ),
                                         child: DropdownButtonFormField<String>(
@@ -783,26 +839,39 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                               size: 14,
                                             ),
                                             hintText: 'Urutkan',
-                                            contentPadding: EdgeInsets.symmetric(
-                                              vertical: 4,
-                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                  vertical: 4,
+                                                ),
                                           ),
                                           items: const [
                                             DropdownMenuItem(
                                               value: 'Nama',
-                                              child: Text('Nama', style: TextStyle(fontSize: 10)),
+                                              child: Text(
+                                                'Nama',
+                                                style: TextStyle(fontSize: 10),
+                                              ),
                                             ),
                                             DropdownMenuItem(
                                               value: 'Area',
-                                              child: Text('Area', style: TextStyle(fontSize: 10)),
+                                              child: Text(
+                                                'Area',
+                                                style: TextStyle(fontSize: 10),
+                                              ),
                                             ),
                                             DropdownMenuItem(
                                               value: 'Email',
-                                              child: Text('Email', style: TextStyle(fontSize: 10)),
+                                              child: Text(
+                                                'Email',
+                                                style: TextStyle(fontSize: 10),
+                                              ),
                                             ),
                                             DropdownMenuItem(
                                               value: 'Tanggal',
-                                              child: Text('Tanggal', style: TextStyle(fontSize: 10)),
+                                              child: Text(
+                                                'Tanggal',
+                                                style: TextStyle(fontSize: 10),
+                                              ),
                                             ),
                                           ],
                                           onChanged: (value) =>
@@ -960,20 +1029,20 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                           : LayoutBuilder(
                               builder: (context, constraints) {
                                 final screenWidth = constraints.maxWidth;
-                                final crossAxisCount = screenWidth > 1200 
-                                    ? 4 
-                                    : screenWidth > 900 
-                                        ? 3 
-                                        : screenWidth > 600 
-                                            ? 2 
-                                            : 1;
-                                final childAspectRatio = screenWidth > 1200 
-                                    ? 0.9 
-                                    : screenWidth > 900 
-                                        ? 1.0 
-                                        : screenWidth > 600 
-                                            ? 1.4 
-                                            : 2.5;
+                                final crossAxisCount = screenWidth > 1200
+                                    ? 4
+                                    : screenWidth > 900
+                                    ? 3
+                                    : screenWidth > 600
+                                    ? 2
+                                    : 1;
+                                final childAspectRatio = screenWidth > 1200
+                                    ? 0.9
+                                    : screenWidth > 900
+                                    ? 1.0
+                                    : screenWidth > 600
+                                    ? 1.4
+                                    : 2.5;
 
                                 return RefreshIndicator(
                                   onRefresh: () async {
@@ -1150,7 +1219,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          teknisi.name.length > 16 
+                          teknisi.name.length > 16
                               ? '${teknisi.name.substring(0, 14)}...'
                               : teknisi.name,
                           style: theme.textTheme.titleSmall?.copyWith(
@@ -1163,7 +1232,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 1),
                         Text(
-                          teknisi.email.length > 20 
+                          teknisi.email.length > 20
                               ? '${teknisi.email.substring(0, 18)}...'
                               : teknisi.email,
                           style: theme.textTheme.bodySmall?.copyWith(
@@ -1206,7 +1275,10 @@ class EnhancedTeknisiCard extends StatelessWidget {
                           children: [
                             Icon(Icons.delete, size: 12, color: kRose),
                             SizedBox(width: 4),
-                            Text('Hapus', style: TextStyle(color: kRose, fontSize: 10)),
+                            Text(
+                              'Hapus',
+                              style: TextStyle(color: kRose, fontSize: 10),
+                            ),
                           ],
                         ),
                       ),
@@ -1233,7 +1305,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        teknisi.phone!.length > 12 
+                        teknisi.phone!.length > 12
                             ? '${teknisi.phone!.substring(0, 10)}...'
                             : teknisi.phone!,
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -1256,7 +1328,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        teknisi.areaKerja!.length > 14 
+                        teknisi.areaKerja!.length > 14
                             ? '${teknisi.areaKerja!.substring(0, 12)}...'
                             : teknisi.areaKerja!,
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -1278,7 +1350,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                   spacing: 1,
                   runSpacing: 1,
                   children: teknisi.roles.take(2).map((role) {
-                    final displayRole = role.length > 8 
+                    final displayRole = role.length > 8
                         ? '${role.substring(0, 6)}..'
                         : role;
                     return Container(

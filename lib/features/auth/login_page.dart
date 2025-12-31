@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/services/auth_service.dart';
 import '../../core/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
+import '../../theme/app_theme.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,13 +11,21 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
   final authService = AuthService();
 
   bool loading = false;
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    emailCtrl.dispose();
+    passCtrl.dispose();
+    super.dispose();
+  }
 
   Future<void> login() async {
     if (!(_formKey.currentState?.validate() ?? false)) {
@@ -28,18 +37,18 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      // capture provider and messenger synchronously to avoid using BuildContext after await
       final authProv = context.read<AuthProvider>();
       final messenger = ScaffoldMessenger.of(context);
 
       final res = await authService.login(emailCtrl.text.trim(), passCtrl.text);
 
-      // Remove debug print for production - AuthGate will handle redirect automatically
       messenger.showSnackBar(
-        const SnackBar(content: Text('Login berhasil! Mengalihkan...')),
+        SnackBar(
+          content: const Text('Login berhasil! Mengalihkan...'),
+          backgroundColor: AppTheme.kLime,
+        ),
       );
 
-      // persist token & role in provider
       final token = res['token'] as String?;
       final role = res['user']?['role'] as String? ?? 'user';
 
@@ -49,16 +58,15 @@ class _LoginPageState extends State<LoginPage> {
 
       await authProv.setAuth(token: token, role: role);
 
-      if (!mounted) {
-        return;
-      }
-
-      // AuthGate akan menangani redirect secara otomatis berdasarkan auth state change
+      if (!mounted) return;
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Login gagal: ${e.toString()}')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login gagal: ${e.toString()}'),
+            backgroundColor: AppTheme.kRose,
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -69,270 +77,258 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  @override
-  void dispose() {
-    emailCtrl.dispose();
-    passCtrl.dispose();
-    super.dispose();
+  Future<void> _showForgotPasswordDialog() async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Lupa Password'),
+        content: const Text('Fitur lupa password belum tersedia. Silakan hubungi administrator.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorScheme.primary.withValues(alpha: 0.1),
-              colorScheme.secondary.withValues(alpha: 0.05),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Logo Section
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: colorScheme.primary.withValues(alpha: 0.1),
-                        border: Border.all(
-                          color: colorScheme.primary.withValues(alpha: 0.2),
-                          width: 1,
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.location_on_rounded,
-                        size: 48,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    
-                    // App Name
-                    Text(
-                      'TrackFi',
-                      style: theme.textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    
-                    Text(
-                      'Sistem Pelacakan Teknisi',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: colorScheme.onSurface.withValues(alpha: 0.7),
-                      ),
-                    ),
-                    const SizedBox(height: 48),
-                    
-                    // Login Card
-                    Container(
-                      decoration: BoxDecoration(
-                        color: colorScheme.surface,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: colorScheme.onSurface.withValues(alpha: 0.1),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(32),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                'Masuk ke Akun',
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 32),
-                              
-                              // Email Field
-                              TextFormField(
-                                controller: emailCtrl,
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: InputDecoration(
-                                  labelText: 'Email',
-                                  hintText: 'Masukkan email Anda',
-                                  prefixIcon: Icon(
-                                    Icons.email_outlined,
-                                    color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: colorScheme.outline.withValues(alpha: 0.5),
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: colorScheme.outline.withValues(alpha: 0.3),
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: colorScheme.primary,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 16,
-                                  ),
-                                ),
-                                validator: (v) {
-                                  if (v == null || v.trim().isEmpty) {
-                                    return 'Masukkan email';
-                                  }
-                                  if (!RegExp(
-                                    r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}",
-                                  ).hasMatch(v.trim())) {
-                                    return 'Email tidak valid';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              
-                              // Password Field
-                              TextFormField(
-                                controller: passCtrl,
-                                decoration: InputDecoration(
-                                  labelText: 'Password',
-                                  hintText: 'Masukkan password Anda',
-                                  prefixIcon: Icon(
-                                    Icons.lock_outline,
-                                    color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: colorScheme.outline.withValues(alpha: 0.5),
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: colorScheme.outline.withValues(alpha: 0.3),
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                      color: colorScheme.primary,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 16,
-                                  ),
-                                ),
-                                obscureText: true,
-                                validator: (v) {
-                                  if (v == null || v.isEmpty) {
-                                    return 'Masukkan password';
-                                  }
-                                  if (v.length < 6) {
-                                    return 'Password minimal 6 karakter';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 32),
-                              
-                              // Login Button
-                              SizedBox(
-                                height: 52,
-                                child: ElevatedButton(
-                                  onPressed: loading ? null : login,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: colorScheme.primary,
-                                    foregroundColor: colorScheme.onPrimary,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
-                                  ),
-                                  child: loading
-                                      ? SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2.5,
-                                            valueColor: AlwaysStoppedAnimation(
-                                              colorScheme.onPrimary,
-                                            ),
-                                          ),
-                                        )
-                                      : Text(
-                                          'Masuk',
-                                          style: theme.textTheme.titleMedium?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              
-                              // Forgot Password
-                              Center(
-                                child: TextButton(
-                                  onPressed: () {
-                                    // TODO: Implement forgot password
-                                  },
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: colorScheme.primary,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 8,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Lupa password?',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+      backgroundColor: AppTheme.kBg,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Simplified Logo
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: AppTheme.kIndigo,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Icon(
+                    Icons.location_on,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
-              ),
+
+                const SizedBox(height: 16),
+
+                // App Name
+                Text(
+                  'TrackFO',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.kTextPrimary,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  'Sistem Pelacakan Teknisi',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppTheme.kTextSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+
+                const SizedBox(height: 28),
+
+                // Minimal Login Card
+                Container(
+                  width: 320,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Masuk',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.kTextPrimary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Email Field
+                        TextFormField(
+                          controller: emailCtrl,
+                          keyboardType: TextInputType.emailAddress,
+                          style: TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            hintText: 'Email',
+                            prefixIcon: Icon(
+                              Icons.email_outlined,
+                              size: 20,
+                              color: AppTheme.kIndigo,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey.shade50,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: AppTheme.kIndigo, width: 2),
+                            ),
+                          ),
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) {
+                              return 'Masukkan email';
+                            }
+                            if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}").hasMatch(v.trim())) {
+                              return 'Email tidak valid';
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Password Field with Enter key support
+                        TextFormField(
+                          controller: passCtrl,
+                          obscureText: _obscurePassword,
+                          onFieldSubmitted: (_) => login(),
+                          style: TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            hintText: 'Password',
+                            prefixIcon: Icon(
+                              Icons.lock_outlined,
+                              size: 20,
+                              color: AppTheme.kIndigo,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                                size: 20,
+                                color: AppTheme.kTextSecondary,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey.shade50,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: AppTheme.kIndigo, width: 2),
+                            ),
+                          ),
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
+                              return 'Masukkan password';
+                            }
+                            if (v.length < 6) {
+                              return 'Password minimal 6 karakter';
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Minimal Login Button
+                        ElevatedButton(
+                          onPressed: loading ? null : login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.kIndigo,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: loading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation(Colors.white),
+                                  ),
+                                )
+                              : const Text(
+                                  'Masuk',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Forgot Password
+                        Center(
+                          child: TextButton(
+                            onPressed: _showForgotPasswordDialog,
+                            child: Text(
+                              'Lupa password?',
+                              style: TextStyle(
+                                color: AppTheme.kIndigo,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                // Footer
+                Text(
+                  'TrackFO v1.0',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.kTextSecondary,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
