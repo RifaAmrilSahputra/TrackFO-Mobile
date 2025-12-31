@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/providers/auth_provider.dart';
 import '../../../widgets/admin_components.dart';
+import '../../../widgets/logout_dialog.dart';
 
 class AdminSettingPage extends StatefulWidget {
   const AdminSettingPage({super.key});
@@ -31,7 +32,7 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
             const SizedBox(height: 20),
             
             // Account Management Section
-            _buildAccountSection(context, auth),
+            _buildAccountSection(context),
             const SizedBox(height: 20),
             
             // Security Section
@@ -203,7 +204,7 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
     );
   }
 
-  Widget _buildAccountSection(BuildContext context, AuthProvider auth) {
+  Widget _buildAccountSection(BuildContext context) {
     return _buildSectionCard(
       context,
       title: 'Manajemen Akun',
@@ -381,7 +382,7 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
             child: ElevatedButton.icon(
               onPressed: auth.isLoggingOut 
                 ? null 
-                : () => _showLogoutDialog(context, auth),
+                : () => LogoutDialog.showForAdmin(context),
               icon: auth.isLoggingOut
                 ? const SizedBox(
                     width: 16,
@@ -557,158 +558,5 @@ class _AdminSettingPageState extends State<AdminSettingPage> {
       ),
     );
   }
-
-  void _showLogoutDialog(BuildContext context, AuthProvider auth) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          contentPadding: const EdgeInsets.all(24),
-          title: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: kRose.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  Icons.logout,
-                  color: kRose,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                'Konfirmasi Logout',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: kTextPrimary,
-                ),
-              ),
-            ],
-          ),
-          content: const Text(
-            'Apakah Anda yakin ingin keluar dari aplikasi admin? Anda akan diarahkan ke halaman login.',
-            style: TextStyle(
-              color: kTextSecondary,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
-                'Batal',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _performLogout(context, auth);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: kRose,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'Logout',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _performLogout(BuildContext context, AuthProvider auth) async {
-    if (!mounted) return; // Check if widget is still mounted
-    
-    // Get messenger before any async operations
-    final messenger = ScaffoldMessenger.of(context);
-    
-    try {
-      // Show loading indicator
-      if (mounted) {
-        messenger.showSnackBar(
-          const SnackBar(
-            content: Row(
-              children: [
-                SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(width: 12),
-                Text('Memproses logout...'),
-              ],
-            ),
-            duration: Duration(seconds: 2),
-            backgroundColor: kCyan,
-          ),
-        );
-      }
-      
-      await auth.logout();
-      
-      // Show success message
-      if (mounted) {
-        messenger.showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 8),
-                const Text('Berhasil logout dari admin panel'),
-              ],
-            ),
-            backgroundColor: kLime,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
-      
-      // Let AuthGate handle navigation automatically based on auth state change
-    } catch (e) {
-      // Show error message only if still mounted
-      if (mounted) {
-        messenger.showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.error, color: Colors.white),
-                const SizedBox(width: 8),
-                Text('Error saat logout: $e'),
-              ],
-            ),
-            backgroundColor: kRose,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
-    }
-  }
 }
+
