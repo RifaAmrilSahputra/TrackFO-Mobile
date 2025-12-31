@@ -119,4 +119,37 @@ class AuthService {
       return false;
     }
   }
+
+  /// Validates the current token with the backend.
+  /// Returns true if token is valid, false if invalid/expired.
+  Future<bool> validateToken(String token) async {
+    try {
+      final res = await _dio.get(
+        '/auth/me',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      final data = res.data;
+      
+      // If we get a valid response with user data, token is valid
+      if (data is Map && data.containsKey('data')) {
+        return true;
+      }
+      
+      // Also consider success if response is 2xx
+      return res.statusCode != null && res.statusCode! >= 200 && res.statusCode! < 300;
+    } on DioException catch (e) {
+      // Token is invalid if we get 401 or other errors
+      if (e.response?.statusCode == 401) {
+        return false;
+      }
+      // For connection errors, we can't validate - assume valid for now
+      // This prevents logging out user on network issues
+      return true;
+    }
+  }
 }

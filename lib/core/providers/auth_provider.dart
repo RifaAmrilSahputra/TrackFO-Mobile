@@ -45,6 +45,30 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  /// Validates token with backend and refreshes auth state if needed.
+  /// Called during splash screen to check if user is still logged in.
+  /// Returns true if validation passed, false if token is invalid/expired.
+  Future<bool> validateAndRefresh() async {
+    if (_token == null || _token!.isEmpty) {
+      return false;
+    }
+
+    try {
+      final isValid = await _authService.validateToken(_token!);
+      
+      if (!isValid) {
+        // Token is invalid, clear auth state
+        await logout();
+        return false;
+      }
+      
+      return true;
+    } catch (e) {
+      // On error, assume token is valid to avoid logging out on network issues
+      return true;
+    }
+  }
+
 
 
   /// Persist token and role and update state

@@ -6,7 +6,7 @@ import '../features/auth/login_page.dart';
 import '../features/main/main_shell.dart';
 
 /// `AuthGate` decides which top-level screen to show based on auth state.
-/// - loading -> `SplashScreen`
+/// - loading (initial) -> `SplashScreen` (will validate token with backend)
 /// - not authenticated -> `LoginPage`
 /// - authenticated -> `MainShell`
 class AuthGate extends StatelessWidget {
@@ -16,7 +16,8 @@ class AuthGate extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
 
-    // Show splash screen during loading or logging out
+    // Show splash screen during initial loading or logging out
+    // Note: Validation is triggered by SplashScreen itself
     if (auth.isLoading || auth.isLoggingOut) {
       return const SplashScreen();
     }
