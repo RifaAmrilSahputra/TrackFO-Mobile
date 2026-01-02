@@ -124,7 +124,8 @@ class TeknisiService {
   /// Membuat teknisi baru
   Future<TeknisiUser> createTeknisi(Map<String, dynamic> teknisiData) async {
     try {
-      final res = await _dio.post('/users/teknisi', data: teknisiData);
+      // Endpoint yang benar sesuai backend: POST /api/users
+      final res = await _dio.post('/users', data: teknisiData);
 
       final data = res.data;
 

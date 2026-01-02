@@ -5,6 +5,7 @@ import '../../../../../core/providers/teknisi_provider.dart';
 import '../../../../../core/services/teknisi_service.dart';
 import '../../../../../models/teknisi_user.dart';
 import '../../../widgets/admin_components.dart';
+import 'add_teknisi_page.dart';
 
 class AdminTeknisiPage extends StatefulWidget {
   const AdminTeknisiPage({super.key});
@@ -112,21 +113,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
     return areas.toList()..sort();
   }
 
-  void _showAddTeknisiDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Tambah Teknisi Baru'),
-        content: const Text('Fitur ini akan segera tersedia'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Tutup'),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildQuickStat(
     String label,
@@ -217,7 +204,15 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
     return Scaffold(
       backgroundColor: kBg,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddTeknisiDialog(),
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddTeknisiPage()),
+          );
+          if (result == true) {
+            _teknisiProvider.fetchTeknisiData();
+          }
+        },
         backgroundColor: kIndigo,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text(
