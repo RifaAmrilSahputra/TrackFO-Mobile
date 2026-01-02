@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'theme/app_theme.dart';
 import 'widgets/auth_gate.dart';
+import 'core/providers/theme_provider.dart';
 
 /// Root application widget. Keeps `main.dart` thin and hosts the
 /// top-level `MaterialApp` and theme.
@@ -9,9 +11,13 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeProvider.flutterThemeMode,
       home: const AuthGate(), // Direct home to AuthGate for proper auth flow
       onUnknownRoute: _onUnknownRoute,
     );

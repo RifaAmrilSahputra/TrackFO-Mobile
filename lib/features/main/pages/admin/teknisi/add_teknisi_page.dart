@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/providers/auth_provider.dart';
 import '../../../../../core/services/teknisi_service.dart';
-import '../../../widgets/admin_components.dart';
+import '../../../../../theme/app_theme.dart';
 
 /// Full-page Add Teknisi form (not a dialog/card)
 class AddTeknisiPage extends StatefulWidget {
@@ -123,7 +123,7 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
+        backgroundColor: AppTheme.kError,
       ),
     );
   }
@@ -133,14 +133,14 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: kBg,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Tambah Teknisi', style: TextStyle(color: kTextPrimary)),
+        title: Text('Tambah Teknisi', style: TextStyle(color: theme.colorScheme.onSurface)),
         centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        elevation: theme.appBarTheme.elevation,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: kTextPrimary),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -155,8 +155,8 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [kIndigo, Color.fromARGB(255, 129, 140, 248)],
+                  gradient: LinearGradient(
+                    colors: [theme.colorScheme.primary, theme.colorScheme.primaryContainer],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -207,19 +207,19 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: kAmber.withValues(alpha: 0.1),
+                    color: AppTheme.kAmber.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: kAmber.withValues(alpha: 0.3)),
+                    border: Border.all(color: AppTheme.kAmber.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.warning_amber, color: kAmber, size: 20),
+                      Icon(Icons.warning_amber, color: AppTheme.kAmber, size: 20),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           'Peringatan: Admin memiliki akses penuh ke sistem',
                           style: TextStyle(
-                            color: kAmber,
+                            color: AppTheme.kAmber,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -237,19 +237,19 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: kRose.withValues(alpha: 0.1),
+                    color: AppTheme.kError.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: kRose.withValues(alpha: 0.3)),
+                    border: Border.all(color: AppTheme.kError.withOpacity(0.3)),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.error, color: kRose, size: 20),
+                      Icon(Icons.error, color: AppTheme.kError, size: 20),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           _errorMessage!,
                           style: TextStyle(
-                            color: kRose,
+                            color: AppTheme.kError,
                             fontSize: 12,
                           ),
                         ),
@@ -284,23 +284,29 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: theme.cardTheme.color,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: kIndigo.withValues(alpha: 0.2)),
+                  border: Border.all(color: theme.colorScheme.outline.withOpacity(0.3)),
                 ),
                 child: DropdownButtonFormField<String>(
                   initialValue: _selectedRole,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Role',
                     border: InputBorder.none,
-                    prefixIcon: Icon(Icons.security, color: kIndigo),
+                    prefixIcon: Icon(Icons.security, color: theme.colorScheme.primary),
+                    labelStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                   ),
+                  dropdownColor: theme.cardTheme.color,
+                  style: TextStyle(color: theme.colorScheme.onSurface),
                   items: _roles.map((role) {
                     return DropdownMenuItem(
                       value: role,
                       child: Text(
                         role[0].toUpperCase() + role.substring(1),
-                        style: const TextStyle(fontSize: 13),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                     );
                   }).toList(),
@@ -319,9 +325,9 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
               // Password Field with Generate Button
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: theme.cardTheme.color,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: kIndigo.withValues(alpha: 0.2)),
+                  border: Border.all(color: theme.colorScheme.outline.withOpacity(0.3)),
                 ),
                 child: Row(
                   children: [
@@ -329,13 +335,13 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                       child: TextFormField(
                         controller: _passwordController,
                         obscureText: true,
-                        style: const TextStyle(color: Colors.black),
+                        style: TextStyle(color: theme.colorScheme.onSurface),
                         decoration: InputDecoration(
                           labelText: 'Password',
                           border: InputBorder.none,
-                          prefixIcon: Icon(Icons.lock, color: kIndigo),
-                          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                          labelStyle: TextStyle(color: Colors.grey[600]),
+                          prefixIcon: Icon(Icons.lock, color: theme.colorScheme.primary),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          labelStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant),
                         ),
                       ),
                     ),
@@ -343,12 +349,18 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                       onPressed: _generatePassword,
                       icon: const Icon(Icons.autorenew, size: 18),
                       label: const Text('Generate', style: TextStyle(fontSize: 12)),
+                      style: TextButton.styleFrom(
+                        foregroundColor: theme.colorScheme.primary,
+                      ),
                     ),
                     if (_passwordAutoGenerated)
                       TextButton.icon(
                         onPressed: _copyPassword,
                         icon: const Icon(Icons.copy, size: 18),
                         label: const Text('Copy', style: TextStyle(fontSize: 12)),
+                        style: TextButton.styleFrom(
+                          foregroundColor: theme.colorScheme.primary,
+                        ),
                       ),
                     const SizedBox(width: 8),
                   ],
@@ -365,12 +377,12 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                       onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        side: BorderSide(color: kIndigo.withValues(alpha: 0.5)),
+                        side: BorderSide(color: AppTheme.kIndigo.withValues(alpha: 0.5)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text('Batal', style: TextStyle(color: kIndigo)),
+                      child: const Text('Batal', style: TextStyle(color: AppTheme.kIndigo)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -378,7 +390,7 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _submit,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: kIndigo,
+                        backgroundColor: AppTheme.kIndigo,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -419,10 +431,10 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
       padding: const EdgeInsets.only(left: 4),
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w700,
-          color: kIndigo,
+          color: Theme.of(context).colorScheme.primary,
           letterSpacing: 0.5,
         ),
       ),
@@ -441,7 +453,7 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: kIndigo.withValues(alpha: 0.2)),
+        border: Border.all(color: AppTheme.kIndigo.withValues(alpha: 0.2)),
       ),
       child: TextFormField(
         controller: ctrl,
@@ -453,7 +465,7 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
         decoration: InputDecoration(
           labelText: label,
           border: InputBorder.none,
-          prefixIcon: Icon(icon, color: kIndigo),
+          prefixIcon: Icon(icon, color: AppTheme.kIndigo),
           contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           labelStyle: TextStyle(color: Colors.grey[600]),
         ),

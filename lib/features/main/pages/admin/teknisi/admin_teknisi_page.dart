@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/providers/auth_provider.dart';
 import '../../../../../core/providers/teknisi_provider.dart';
+import '../../../../../core/providers/theme_provider.dart';
 import '../../../../../core/services/teknisi_service.dart';
 import '../../../../../models/teknisi_user.dart';
-import '../../../widgets/admin_components.dart';
 import 'add_teknisi_page.dart';
+import '../../../../../theme/app_theme.dart';
 
 class AdminTeknisiPage extends StatefulWidget {
   const AdminTeknisiPage({super.key});
@@ -138,7 +139,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: kTextPrimary,
+                color: AppTheme.kTextPrimary,
               ),
             ),
             Text(
@@ -189,7 +190,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            style: ElevatedButton.styleFrom(backgroundColor: kRose),
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.kRose),
             child: const Text('Hapus', style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -202,7 +203,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: kBg,
+      backgroundColor: theme.scaffoldBackgroundColor,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           final result = await Navigator.push(
@@ -213,7 +214,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
             _teknisiProvider.fetchTeknisiData();
           }
         },
-        backgroundColor: kIndigo,
+        backgroundColor: AppTheme.kIndigo,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text(
           'Tambah Teknisi',
@@ -251,12 +252,12 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.error_outline, size: 64, color: kRose),
+                        Icon(Icons.error_outline, size: 64, color: AppTheme.kRose),
                         const SizedBox(height: 16),
                         Text(
                           'Terjadi Kesalahan',
                           style: theme.textTheme.headlineSmall?.copyWith(
-                            color: kRose,
+                            color: AppTheme.kRose,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -267,7 +268,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                             teknisiProvider.error ?? 'Unknown error',
                             textAlign: TextAlign.center,
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: kTextSecondary,
+                              color: AppTheme.kTextSecondary,
                             ),
                           ),
                         ),
@@ -278,7 +279,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                             teknisiProvider.fetchTeknisiData();
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: kIndigo,
+                            backgroundColor: AppTheme.kIndigo,
                             foregroundColor: Colors.white,
                           ),
                           child: const Text('Coba Lagi'),
@@ -305,7 +306,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                       ),
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: theme.cardColor,
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
@@ -325,7 +326,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                 height: 40,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [kIndigo, kCyan],
+                                    colors: [AppTheme.kIndigo, AppTheme.kCyan],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
@@ -346,7 +347,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                       'Total Teknisi',
                                       style: theme.textTheme.titleSmall
                                           ?.copyWith(
-                                            color: kTextSecondary,
+                                            color: theme.colorScheme.onSurfaceVariant,
                                             fontWeight: FontWeight.w500,
                                           ),
                                     ),
@@ -354,7 +355,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                       '${teknisiProvider.totalTeknisi} Teknisi',
                                       style: theme.textTheme.titleLarge
                                           ?.copyWith(
-                                            color: kIndigo,
+                                            color: AppTheme.kIndigo,
                                             fontWeight: FontWeight.w700,
                                           ),
                                     ),
@@ -372,21 +373,21 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                 'Area Kerja',
                                 '${uniqueAreas.length}',
                                 Icons.location_on,
-                                kLime,
+                                AppTheme.kLime,
                               ),
                               const SizedBox(width: 12),
                               _buildQuickStat(
                                 'Terdaftar Hari Ini',
                                 '0',
                                 Icons.today,
-                                kAmber,
+                                AppTheme.kAmber,
                               ),
                               const SizedBox(width: 12),
                               _buildQuickStat(
                                 'Aktif',
                                 '${teknisiProvider.totalTeknisi}',
                                 Icons.check_circle,
-                                kCyan,
+                                AppTheme.kCyan,
                               ),
                             ],
                           ),
@@ -402,7 +403,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                       ),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: theme.cardColor,
                         borderRadius: BorderRadius.circular(14),
                         boxShadow: [
                           BoxShadow(
@@ -418,10 +419,10 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                           // Search Bar
                           Container(
                             decoration: BoxDecoration(
-                              color: kBg,
+                              color: theme.colorScheme.surfaceVariant,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: kIndigo.withValues(alpha: 0.1),
+                                color: AppTheme.kIndigo.withValues(alpha: 0.1),
                               ),
                             ),
                             child: TextField(
@@ -431,14 +432,14 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                 hintText: 'Cari nama atau email...',
                                 prefixIcon: const Icon(
                                   Icons.search,
-                                  color: kIndigo,
+                                  color: AppTheme.kIndigo,
                                   size: 18,
                                 ),
                                 suffixIcon: _searchQuery.isNotEmpty
                                     ? IconButton(
                                         icon: const Icon(
                                           Icons.clear,
-                                          color: kTextSecondary,
+                                          color: AppTheme.kTextSecondary,
                                           size: 16,
                                         ),
                                         onPressed: () {
@@ -452,7 +453,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                   borderSide: BorderSide.none,
                                 ),
                                 filled: true,
-                                fillColor: kBg,
+                                fillColor: theme.colorScheme.surfaceVariant,
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 12,
                                   vertical: 10,
@@ -483,10 +484,10 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         horizontal: 6,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: kBg,
+                                        color: theme.colorScheme.surfaceVariant,
                                         borderRadius: BorderRadius.circular(6),
                                         border: Border.all(
-                                          color: kLime.withValues(alpha: 0.3),
+                                          color: AppTheme.kLime.withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: DropdownButtonFormField<String>(
@@ -495,7 +496,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                           border: InputBorder.none,
                                           icon: Icon(
                                             Icons.filter_list,
-                                            color: kLime,
+                                            color: AppTheme.kLime,
                                             size: 12,
                                           ),
                                           hintText: 'Area',
@@ -547,10 +548,10 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         horizontal: 6,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: kBg,
+                                        color: theme.colorScheme.surfaceVariant,
                                         borderRadius: BorderRadius.circular(6),
                                         border: Border.all(
-                                          color: kAmber.withValues(alpha: 0.3),
+                                          color: AppTheme.kAmber.withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: DropdownButtonFormField<String>(
@@ -559,7 +560,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                           border: InputBorder.none,
                                           icon: Icon(
                                             Icons.sort,
-                                            color: kAmber,
+                                            color: AppTheme.kAmber,
                                             size: 12,
                                           ),
                                           hintText: 'Urut',
@@ -618,10 +619,10 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         horizontal: 8,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: kBg,
+                                        color: theme.colorScheme.surfaceVariant,
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
-                                          color: kLime.withValues(alpha: 0.3),
+                                          color: AppTheme.kLime.withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: DropdownButtonFormField<String>(
@@ -630,7 +631,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                           border: InputBorder.none,
                                           icon: Icon(
                                             Icons.filter_list,
-                                            color: kLime,
+                                            color: AppTheme.kLime,
                                             size: 14,
                                           ),
                                           hintText: 'Area',
@@ -681,10 +682,10 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         horizontal: 8,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: kBg,
+                                        color: theme.colorScheme.surfaceVariant,
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
-                                          color: kAmber.withValues(alpha: 0.3),
+                                          color: AppTheme.kAmber.withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: DropdownButtonFormField<String>(
@@ -693,7 +694,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                           border: InputBorder.none,
                                           icon: Icon(
                                             Icons.sort,
-                                            color: kAmber,
+                                            color: AppTheme.kAmber,
                                             size: 14,
                                           ),
                                           hintText: 'Urut',
@@ -748,12 +749,12 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                           horizontal: 8,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: kBg,
+                                          color: theme.colorScheme.surfaceVariant,
                                           borderRadius: BorderRadius.circular(
                                             8,
                                           ),
                                           border: Border.all(
-                                            color: kLime.withValues(alpha: 0.3),
+                                            color: AppTheme.kLime.withValues(alpha: 0.3),
                                           ),
                                         ),
                                         child: DropdownButtonFormField<String>(
@@ -762,7 +763,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                             border: InputBorder.none,
                                             icon: Icon(
                                               Icons.filter_list,
-                                              color: kLime,
+                                              color: AppTheme.kLime,
                                               size: 14,
                                             ),
                                             hintText: 'Filter Area',
@@ -814,12 +815,12 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                           horizontal: 8,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: kBg,
+                                          color: theme.colorScheme.surfaceVariant,
                                           borderRadius: BorderRadius.circular(
                                             8,
                                           ),
                                           border: Border.all(
-                                            color: kAmber.withValues(
+                                            color: AppTheme.kAmber.withValues(
                                               alpha: 0.3,
                                             ),
                                           ),
@@ -830,7 +831,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                             border: InputBorder.none,
                                             icon: Icon(
                                               Icons.sort,
-                                              color: kAmber,
+                                              color: AppTheme.kAmber,
                                               size: 14,
                                             ),
                                             hintText: 'Urutkan',
@@ -894,7 +895,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                           Text(
                             'Menampilkan ${filteredTeknisi.length} dari ${teknisiProvider.totalTeknisi} teknisi',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: kTextSecondary,
+                              color: theme.colorScheme.onSurfaceVariant,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -915,18 +916,18 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                   vertical: 3,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: kRose.withValues(alpha: 0.1),
+                                  color: AppTheme.kRose.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.clear, color: kRose, size: 12),
+                                    Icon(Icons.clear, color: AppTheme.kRose, size: 12),
                                     const SizedBox(width: 3),
                                     Text(
                                       'Reset Filter',
                                       style: TextStyle(
-                                        color: kRose,
+                                        color: AppTheme.kRose,
                                         fontSize: 11,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -952,7 +953,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                     width: 80,
                                     height: 80,
                                     decoration: BoxDecoration(
-                                      color: kTextSecondary.withValues(
+                                      color: theme.colorScheme.onSurfaceVariant.withValues(
                                         alpha: 0.1,
                                       ),
                                       borderRadius: BorderRadius.circular(20),
@@ -962,7 +963,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                           ? Icons.search_off
                                           : Icons.people_outline,
                                       size: 40,
-                                      color: kTextSecondary.withValues(
+                                      color: theme.colorScheme.onSurfaceVariant.withValues(
                                         alpha: 0.6,
                                       ),
                                     ),
@@ -977,8 +978,8 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         : 'Belum ada data teknisi',
                                     style: theme.textTheme.titleMedium
                                         ?.copyWith(
-                                          color: kTextPrimary,
                                           fontWeight: FontWeight.w600,
+                                          color: theme.colorScheme.onSurface,
                                         ),
                                   ),
                                   const SizedBox(height: 8),
@@ -987,7 +988,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                         ? 'Coba ubah kata kunci pencarian atau filter'
                                         : 'Silakan refresh atau coba lagi nanti',
                                     style: theme.textTheme.bodySmall?.copyWith(
-                                      color: kTextSecondary,
+                                      color: theme.colorScheme.onSurfaceVariant,
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
@@ -1005,7 +1006,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                       icon: const Icon(Icons.refresh, size: 16),
                                       label: const Text('Reset Filter'),
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: kIndigo,
+                                        backgroundColor: AppTheme.kIndigo,
                                         foregroundColor: Colors.white,
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 20,
@@ -1043,7 +1044,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                                   onRefresh: () async {
                                     await _teknisiProvider.fetchTeknisiData();
                                   },
-                                  color: kIndigo,
+                                  color: AppTheme.kIndigo,
                                   child: CustomScrollView(
                                     controller: _scrollController,
                                     slivers: [
@@ -1143,7 +1144,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
     final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -1152,7 +1153,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
             offset: const Offset(0, 3),
           ),
         ],
-        border: Border.all(color: kIndigo.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.kIndigo.withValues(alpha: 0.1)),
       ),
       child: InkWell(
         onTap: onTap,
@@ -1171,7 +1172,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                     height: 32,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [kIndigo, kCyan],
+                        colors: [AppTheme.kIndigo, AppTheme.kCyan],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -1197,7 +1198,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                             width: 8,
                             height: 8,
                             decoration: BoxDecoration(
-                              color: kLime,
+                              color: AppTheme.kLime,
                               border: Border.all(color: Colors.white, width: 1),
                               borderRadius: BorderRadius.circular(4),
                             ),
@@ -1219,7 +1220,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                               : teknisi.name,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: kTextPrimary,
+                            color: theme.colorScheme.onSurface,
                             fontSize: 11,
                           ),
                           maxLines: 1,
@@ -1231,7 +1232,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                               ? '${teknisi.email.substring(0, 18)}...'
                               : teknisi.email,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: kTextSecondary,
+                            color: theme.colorScheme.onSurfaceVariant,
                             fontSize: 9,
                           ),
                           maxLines: 1,
@@ -1268,11 +1269,11 @@ class EnhancedTeknisiCard extends StatelessWidget {
                         value: 'delete',
                         child: Row(
                           children: [
-                            Icon(Icons.delete, size: 12, color: kRose),
+                            Icon(Icons.delete, size: 12, color: AppTheme.kRose),
                             SizedBox(width: 4),
                             Text(
                               'Hapus',
-                              style: TextStyle(color: kRose, fontSize: 10),
+                              style: TextStyle(color: AppTheme.kRose, fontSize: 10),
                             ),
                           ],
                         ),
@@ -1282,7 +1283,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                       padding: const EdgeInsets.all(2),
                       child: Icon(
                         Icons.more_vert,
-                        color: kTextSecondary,
+                        color: theme.colorScheme.onSurfaceVariant,
                         size: 14,
                       ),
                     ),
@@ -1296,7 +1297,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
               if (teknisi.phone != null) ...[
                 Row(
                   children: [
-                    Icon(Icons.phone, size: 12, color: kCyan),
+                    Icon(Icons.phone, size: 12, color: AppTheme.kCyan),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
@@ -1304,7 +1305,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                             ? '${teknisi.phone!.substring(0, 10)}...'
                             : teknisi.phone!,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: kTextSecondary,
+                          color: theme.colorScheme.onSurfaceVariant,
                           fontSize: 9,
                         ),
                         maxLines: 1,
@@ -1319,7 +1320,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
               if (teknisi.areaKerja != null) ...[
                 Row(
                   children: [
-                    Icon(Icons.location_on, size: 12, color: kLime),
+                    Icon(Icons.location_on, size: 12, color: AppTheme.kLime),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
@@ -1327,7 +1328,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                             ? '${teknisi.areaKerja!.substring(0, 12)}...'
                             : teknisi.areaKerja!,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: kTextSecondary,
+                          color: theme.colorScheme.onSurfaceVariant,
                           fontSize: 9,
                         ),
                         maxLines: 1,
@@ -1355,10 +1356,10 @@ class EnhancedTeknisiCard extends StatelessWidget {
                         vertical: 1,
                       ),
                       decoration: BoxDecoration(
-                        color: kIndigo.withValues(alpha: 0.1),
+                        color: AppTheme.kIndigo.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(3),
                         border: Border.all(
-                          color: kIndigo.withValues(alpha: 0.3),
+                          color: AppTheme.kIndigo.withValues(alpha: 0.3),
                           width: 0.5,
                         ),
                       ),
@@ -1366,7 +1367,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                         displayRole.toLowerCase(),
                         style: TextStyle(
                           fontSize: 8,
-                          color: kIndigo,
+                          color: AppTheme.kIndigo,
                           fontWeight: FontWeight.w500,
                         ),
                         textAlign: TextAlign.center,
@@ -1379,7 +1380,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                   Text(
                     '+${teknisi.roles.length - 2} lainnya',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: kTextSecondary.withValues(alpha: 0.7),
+                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                       fontSize: 8,
                     ),
                   ),
@@ -1395,7 +1396,7 @@ class EnhancedTeknisiCard extends StatelessWidget {
                     child: Text(
                       _formatShortDate(teknisi.createdAt),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: kTextSecondary.withValues(alpha: 0.7),
+                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                         fontSize: 8,
                       ),
                       maxLines: 1,
@@ -1408,13 +1409,13 @@ class EnhancedTeknisiCard extends StatelessWidget {
                       vertical: 1,
                     ),
                     decoration: BoxDecoration(
-                      color: kLime.withValues(alpha: 0.1),
+                      color: AppTheme.kLime.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(2),
                     ),
                     child: Text(
                       'Aktif',
                       style: TextStyle(
-                        color: kLime,
+                        color: AppTheme.kLime,
                         fontSize: 7,
                         fontWeight: FontWeight.w600,
                       ),
@@ -1476,7 +1477,7 @@ class TeknisiDetailSheet extends StatelessWidget {
                 height: 4,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: kTextSecondary.withValues(alpha: 0.3),
+                  color: AppTheme.kTextSecondary.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1491,7 +1492,7 @@ class TeknisiDetailSheet extends StatelessWidget {
                       height: 60,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [kCyan, Color.fromARGB(255, 129, 140, 248)],
+                          colors: [AppTheme.kCyan, Color.fromARGB(255, 129, 140, 248)],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -1512,14 +1513,14 @@ class TeknisiDetailSheet extends StatelessWidget {
                             teknisi.name,
                             style: theme.textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.w700,
-                              color: kTextPrimary,
+                              color: AppTheme.kTextPrimary,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             teknisi.email,
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: kTextSecondary,
+                              color: AppTheme.kTextSecondary,
                             ),
                           ),
                         ],
@@ -1539,25 +1540,25 @@ class TeknisiDetailSheet extends StatelessWidget {
                       icon: Icons.phone,
                       label: 'Telepon',
                       value: teknisi.phone ?? 'Tidak tersedia',
-                      color: kCyan,
+                      color: AppTheme.kCyan,
                     ),
                     _buildInfoTile(
                       icon: Icons.location_on,
                       label: 'Area Kerja',
                       value: teknisi.areaKerja ?? 'Tidak tersedia',
-                      color: kLime,
+                      color: AppTheme.kLime,
                     ),
                     _buildInfoTile(
                       icon: Icons.home,
                       label: 'Alamat',
                       value: teknisi.alamat ?? 'Tidak tersedia',
-                      color: kAmber,
+                      color: AppTheme.kAmber,
                     ),
                     _buildInfoTile(
                       icon: Icons.my_location,
                       label: 'Koordinat',
                       value: teknisi.koordinat ?? 'Tidak tersedia',
-                      color: kRose,
+                      color: AppTheme.kRose,
                     ),
 
                     const SizedBox(height: 20),
@@ -1567,7 +1568,7 @@ class TeknisiDetailSheet extends StatelessWidget {
                       'Role',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: kTextPrimary,
+                        color: AppTheme.kTextPrimary,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -1582,17 +1583,17 @@ class TeknisiDetailSheet extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: kIndigo.withValues(alpha: 0.1),
+                            color: AppTheme.kIndigo.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: kIndigo.withValues(alpha: 0.3),
+                              color: AppTheme.kIndigo.withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
                           child: Text(
                             role.toLowerCase(),
                             style: TextStyle(
-                              color: kIndigo,
+                              color: AppTheme.kIndigo,
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
                             ),
@@ -1608,14 +1609,14 @@ class TeknisiDetailSheet extends StatelessWidget {
                       'Terdaftar pada',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: kTextPrimary,
+                        color: AppTheme.kTextPrimary,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       _formatDate(teknisi.createdAt),
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: kTextSecondary,
+                        color: AppTheme.kTextSecondary,
                       ),
                     ),
 
@@ -1672,7 +1673,7 @@ class TeknisiDetailSheet extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: kTextSecondary,
+                    color: AppTheme.kTextSecondary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -1681,7 +1682,7 @@ class TeknisiDetailSheet extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: kTextPrimary,
+                    color: AppTheme.kTextPrimary,
                   ),
                 ),
               ],

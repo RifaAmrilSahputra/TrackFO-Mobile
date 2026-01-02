@@ -35,11 +35,15 @@ class LogoutDialog {
     required String role,
     required String successMessage,
   }) {
+    final theme = Theme.of(context);
+    final errorColor = theme.colorScheme.error;
+    final primaryColor = theme.colorScheme.primary;
+    
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: theme.colorScheme.surface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -50,12 +54,12 @@ class LogoutDialog {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: AppTheme.kRose.withValues(alpha: 0.1),
+                  color: errorColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   Icons.logout,
-                  color: AppTheme.kRose,
+                  color: errorColor,
                   size: 18,
                 ),
               ),
@@ -63,10 +67,10 @@ class LogoutDialog {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.kTextPrimary,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -78,9 +82,9 @@ class LogoutDialog {
               Flexible(
                 child: Text(
                   message,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: AppTheme.kTextSecondary,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                   textAlign: TextAlign.start,
                 ),
@@ -90,11 +94,11 @@ class LogoutDialog {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
+              child: Text(
                 'Batal',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  color: AppTheme.kTextSecondary,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
             ),
@@ -108,7 +112,7 @@ class LogoutDialog {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.kRose,
+                backgroundColor: errorColor,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 shape: RoundedRectangleBorder(
@@ -137,6 +141,9 @@ class LogoutDialog {
   }) async {
     final authProvider = context.read<AuthProvider>();
     final messenger = ScaffoldMessenger.of(context);
+    final theme = Theme.of(context);
+    final successColor = theme.colorScheme.secondary;
+    final loadingColor = theme.colorScheme.primary;
 
     try {
       // Show loading indicator
@@ -144,7 +151,7 @@ class LogoutDialog {
         SnackBar(
           content: Row(
             children: [
-              const SizedBox(
+              SizedBox(
                 width: 16,
                 height: 16,
                 child: CircularProgressIndicator(
@@ -157,7 +164,7 @@ class LogoutDialog {
             ],
           ),
           duration: const Duration(seconds: 2),
-          backgroundColor: AppTheme.kCyan,
+          backgroundColor: loadingColor,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -179,7 +186,7 @@ class LogoutDialog {
               ),
             ],
           ),
-          backgroundColor: AppTheme.kLime,
+          backgroundColor: successColor,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -201,7 +208,7 @@ class LogoutDialog {
               ),
             ],
           ),
-          backgroundColor: AppTheme.kRose,
+          backgroundColor: theme.colorScheme.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

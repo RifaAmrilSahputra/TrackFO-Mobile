@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/providers/auth_provider.dart';
-import '../theme/app_theme.dart';
 
 /// Minimalist splash screen dengan tema yang konsisten dengan halaman login.
 /// Saat splash screen tampil, sistem memvalidasi status login di background.
@@ -35,8 +34,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+    final onSurfaceColor = theme.colorScheme.onSurface;
+    final onSurfaceVariantColor = theme.colorScheme.onSurfaceVariant;
+    
     return Scaffold(
-      backgroundColor: AppTheme.kBg,
+      backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -47,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: AppTheme.kIndigo,
+                  color: primaryColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Icon(
@@ -65,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
-                  color: AppTheme.kTextPrimary,
+                  color: onSurfaceColor,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -77,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 'Sistem Pelacakan Teknisi',
                 style: TextStyle(
                   fontSize: 14,
-                  color: AppTheme.kTextSecondary,
+                  color: onSurfaceVariantColor,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -85,12 +89,12 @@ class _SplashScreenState extends State<SplashScreen> {
               const SizedBox(height: 48),
 
               // Loading indicator
-              const SizedBox(
+              SizedBox(
                 width: 24,
                 height: 24,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation(AppTheme.kIndigo),
+                  valueColor: AlwaysStoppedAnimation(primaryColor),
                 ),
               ),
 
@@ -101,7 +105,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 'Memuat...',
                 style: TextStyle(
                   fontSize: 13,
-                  color: AppTheme.kTextSecondary,
+                  color: onSurfaceVariantColor,
                 ),
               ),
             ],

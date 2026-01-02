@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
-
-// Re-declare colors here to avoid circular imports with admin_home.dart
-const Color kBg = Color(0xFFF8FAFF);
-const Color kIndigo = Color(0xFF4F46E5);
-const Color kIndigoLight = Color(0xFF818CF8);
-const Color kCyan = Color(0xFF06B6D4);
-const Color kLime = Color(0xFF10B981);
-const Color kAmber = Color(0xFFF59E0B);
-const Color kRose = Color(0xFFF43F5E);
-const Color kCardBg = Color(0xFFFFFFFF);
-const Color kTextPrimary = Color(0xFF1F2937);
-const Color kTextSecondary = Color(0xFF6B7280);
+import 'package:flutter/painting.dart';
+import '../../../theme/app_theme.dart';
 
 /// Title block used inside Admin AppBar.
 class AdminHeaderTitle extends StatelessWidget {
@@ -25,14 +15,18 @@ class AdminHeaderTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+    final secondaryColor = theme.colorScheme.secondary;
+    
     return Row(
       children: [
         Container(
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [kIndigo, Color.fromARGB(255, 248, 129, 242)],
+            gradient: LinearGradient(
+              colors: [primaryColor, secondaryColor],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -40,7 +34,7 @@ class AdminHeaderTitle extends StatelessWidget {
           ),
           child: const Icon(
             Icons.dashboard,
-            color: Color.fromARGB(255, 139, 6, 6),
+            color: Colors.white,
             size: 18,
           ),
         ),
@@ -50,18 +44,15 @@ class AdminHeaderTitle extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 16,
+              style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: kTextPrimary,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             Text(
               subtitle,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: kTextSecondary,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -85,17 +76,17 @@ class StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(14),
         gradient: LinearGradient(
           colors: [
-            color.withAlpha((0.08 * 255).round()),
-            color.withAlpha((0.03 * 255).round()),
+            color.withValues(alpha: 0.08),
+            color.withValues(alpha: 0.03),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        border: Border.all(color: color.withAlpha((0.08 * 255).round())),
+        border: Border.all(color: color.withValues(alpha: 0.08)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -113,7 +104,7 @@ class StatCard extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: color.withAlpha((0.12 * 255).round()),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(icon, color: color, size: 20),
@@ -123,7 +114,7 @@ class StatCard extends StatelessWidget {
                 child: Text(
                   title,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: kTextSecondary,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -156,7 +147,7 @@ class ChartCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
@@ -179,14 +170,14 @@ class ChartCard extends StatelessWidget {
                     title,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: kTextPrimary,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: kTextSecondary,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -218,6 +209,7 @@ class QuickActionBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: [
         Container(
@@ -225,14 +217,14 @@ class QuickActionBtn extends StatelessWidget {
           height: 56,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [color, color.withAlpha((0.8 * 255).round())],
+              colors: [color, color.withValues(alpha: 0.8)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: color.withAlpha((0.3 * 255).round()),
+                color: color.withValues(alpha: 0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -243,10 +235,9 @@ class QuickActionBtn extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 12,
+          style: theme.textTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.w600,
-            color: kTextPrimary,
+            color: theme.colorScheme.onSurface,
           ),
         ),
       ],
@@ -272,6 +263,7 @@ class ActivityTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -280,7 +272,7 @@ class ActivityTile extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: color.withAlpha((0.1 * 255).round()),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -292,22 +284,25 @@ class ActivityTile extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: kTextPrimary,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 Text(
                   description,
-                  style: const TextStyle(fontSize: 12, color: kTextSecondary),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
           ),
           Text(
             time,
-            style: const TextStyle(fontSize: 12, color: kTextSecondary),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -330,7 +325,7 @@ class MiniLineChart extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     final fillPaint = Paint()
-      ..color = color.withAlpha((0.1 * 255).round())
+      ..color = color.withValues(alpha: 0.1)
       ..style = PaintingStyle.fill;
 
     final points = [
@@ -411,7 +406,7 @@ class MiniDonutChart extends CustomPainter {
     final radius = size.height / 2.5;
 
     final bgPaint = Paint()
-      ..color = Colors.black.withAlpha((0.1 * 255).round())
+      ..color = Colors.black.withValues(alpha: 0.1)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 6;
 
@@ -431,13 +426,16 @@ class MiniDonutChart extends CustomPainter {
       fgPaint,
     );
 
+    // Use a contrasting color for the text (white for dark backgrounds, black for light)
+    final textColor = color.computeLuminance() > 0.5 ? Colors.black87 : Colors.white;
+
     final textPainter = TextPainter(
-      text: const TextSpan(
+      text: TextSpan(
         text: '75%',
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w700,
-          color: Colors.black87,
+          color: textColor,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -475,10 +473,14 @@ class TeknisiCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+    final secondaryColor = theme.colorScheme.secondary;
+    final tertiaryColor = theme.colorScheme.tertiary;
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -501,7 +503,7 @@ class TeknisiCard extends StatelessWidget {
                   height: 40,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [kCyan, Color.fromARGB(255, 129, 140, 248)],
+                      colors: [secondaryColor, primaryColor],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -522,14 +524,14 @@ class TeknisiCard extends StatelessWidget {
                         name,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: kTextPrimary,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         email,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: kTextSecondary,
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -541,12 +543,12 @@ class TeknisiCard extends StatelessWidget {
             if (phone != null) ...[
               Row(
                 children: [
-                  Icon(Icons.phone, size: 16, color: kCyan),
+                  Icon(Icons.phone, size: 16, color: secondaryColor),
                   const SizedBox(width: 8),
                   Text(
                     phone!,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: kTextSecondary,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -556,13 +558,13 @@ class TeknisiCard extends StatelessWidget {
             if (areaKerja != null) ...[
               Row(
                 children: [
-                  Icon(Icons.location_on, size: 16, color: kLime),
+                  Icon(Icons.location_on, size: 16, color: tertiaryColor),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       areaKerja!,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: kTextSecondary,
+                        color: theme.colorScheme.onSurfaceVariant,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -582,14 +584,14 @@ class TeknisiCard extends StatelessWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: kIndigo.withValues(alpha: 0.1),
+                      color: primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       role.toLowerCase(),
                       style: TextStyle(
                         fontSize: 10,
-                        color: kIndigo,
+                        color: primaryColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -603,3 +605,4 @@ class TeknisiCard extends StatelessWidget {
     );
   }
 }
+

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../../core/providers/auth_provider.dart';
 import '../../../../../core/providers/teknisi_provider.dart';
 import '../../../../../core/services/teknisi_service.dart';
-import 'admin_components.dart';
+import '../../../../../theme/app_theme.dart';
 
 /// Enhanced dialog form untuk menambah teknisi baru dengan modern design
 class AddTeknisiForm extends StatefulWidget {
@@ -121,6 +121,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final w = MediaQuery.of(context).size.width;
     final isTablet = w > 600;
     final dialogWidth = isTablet 
@@ -141,14 +142,14 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [kIndigo, kIndigo],
+                  colors: [AppTheme.kIndigo, AppTheme.kIndigo],
                   begin: Alignment.topLeft,
                   end: Alignment.topRight,
                 ),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                 boxShadow: [
                   BoxShadow(
-                    color: kIndigo.withValues(alpha: 0.2),
+                    color: AppTheme.kIndigo.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -161,7 +162,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                     height: 32,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [kCyan, kIndigo],
+                        colors: [AppTheme.kCyan, AppTheme.kIndigo],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -192,7 +193,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                       ],
                     ),
                   ),
-                  _buildCloseButton(),
+                  _buildCloseButton(theme),
                 ],
               ),
             ),
@@ -206,47 +207,47 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // 👤 Data Pribadi Section
-                      _buildSectionHeader('👤 Data Pribadi'),
+                      _buildSectionHeader('👤 Data Pribadi', theme),
                       const SizedBox(height: 16),
 
-                      _buildEnhancedField('Nama Lengkap', _nameController, Icons.person, TextInputType.name),
+                      _buildEnhancedField('Nama Lengkap', _nameController, Icons.person, TextInputType.name, null, theme),
                       const SizedBox(height: 12),
-                      _buildEnhancedField('Email', _emailController, Icons.email, TextInputType.emailAddress, _validateEmail),
+                      _buildEnhancedField('Email', _emailController, Icons.email, TextInputType.emailAddress, _validateEmail, theme),
 
                       const SizedBox(height: 20),
 
                       // 🔐 Kredensial Section
-                      _buildSectionHeader('🔐 Kredensial'),
+                      _buildSectionHeader('🔐 Kredensial', theme),
                       const SizedBox(height: 16),
 
-                      _buildPasswordField(),
+                      _buildPasswordField(theme),
 
                       const SizedBox(height: 20),
 
                       // ⚡ Role & Akses Section
-                      _buildSectionHeader('⚡ Role & Akses'),
+                      _buildSectionHeader('⚡ Role & Akses', theme),
                       const SizedBox(height: 16),
 
-                      _buildRoleDropdown(),
+                      _buildRoleDropdown(theme),
 
                       if (_selectedRole == 'admin')
                         Container(
                           margin: const EdgeInsets.only(top: 12),
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: kAmber.withValues(alpha: 0.1),
+                            color: AppTheme.kAmber.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: kAmber.withValues(alpha: 0.3)),
+                            border: Border.all(color: AppTheme.kAmber.withValues(alpha: 0.3)),
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.warning_amber, color: kAmber, size: 20),
+                              Icon(Icons.warning_amber, color: AppTheme.kAmber, size: 20),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
                                   'Peringatan: Admin memiliki akses penuh ke sistem',
                                   style: TextStyle(
-                                    color: kAmber,
+                                    color: AppTheme.kAmber,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -268,7 +269,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                                 onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
                                 style: OutlinedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(vertical: 14),
-                                  side: BorderSide(color: kIndigo.withValues(alpha: 0.5)),
+                                  side: BorderSide(color: AppTheme.kIndigo.withValues(alpha: 0.5)),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -276,7 +277,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                                 child: const Text(
                                   'Batal',
                                   style: TextStyle(
-                                    color: kIndigo,
+                                    color: AppTheme.kIndigo,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                   ),
@@ -291,13 +292,13 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                               child: ElevatedButton(
                                 onPressed: _isLoading ? null : _handleSubmit,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: kIndigo,
+                                  backgroundColor: AppTheme.kIndigo,
                                   padding: const EdgeInsets.symmetric(vertical: 14),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   elevation: 2,
-                                  shadowColor: kIndigo.withValues(alpha: 0.3),
+                                  shadowColor: AppTheme.kIndigo.withValues(alpha: 0.3),
                                 ),
                                 child: _isLoading
                                     ? const SizedBox(
@@ -332,29 +333,29 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(String title, ThemeData theme) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       decoration: BoxDecoration(
-        color: kIndigo.withValues(alpha: 0.05),
+        color: theme.colorScheme.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: kIndigo.withValues(alpha: 0.1)),
+        border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: kIndigo,
+              color: theme.colorScheme.primary,
               letterSpacing: 0.5,
             ),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Divider(
-              color: kIndigo.withValues(alpha: 0.3),
+              color: theme.colorScheme.primary.withValues(alpha: 0.3),
               thickness: 1,
             ),
           ),
@@ -363,12 +364,12 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
     );
   }
 
-  Widget _buildEnhancedField(String label, TextEditingController ctrl, IconData icon, TextInputType type, [String? Function(String?)? validator]) {
+  Widget _buildEnhancedField(String label, TextEditingController ctrl, IconData icon, TextInputType type, String? Function(String?)? validator, ThemeData theme) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: kIndigo.withValues(alpha: 0.2)),
+        border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -385,7 +386,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(
-            color: kIndigo,
+            color: theme.colorScheme.primary,
             fontWeight: FontWeight.w600,
           ),
           border: InputBorder.none,
@@ -394,28 +395,28 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
             height: 40,
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: kIndigo.withValues(alpha: 0.1),
+              color: theme.colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: kIndigo, size: 20),
+            child: Icon(icon, color: theme.colorScheme.primary, size: 20),
           ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: kIndigo, width: 2),
+            borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
           ),
         ),
-        style: const TextStyle(fontSize: 14),
+        style: TextStyle(fontSize: 14, color: theme.colorScheme.onSurface),
       ),
     );
   }
 
-  Widget _buildPasswordField() {
+  Widget _buildPasswordField(ThemeData theme) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: kIndigo.withValues(alpha: 0.2)),
+        border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -433,7 +434,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
             decoration: InputDecoration(
               labelText: 'Password',
               labelStyle: TextStyle(
-                color: kIndigo,
+                color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w600,
               ),
               border: InputBorder.none,
@@ -442,15 +443,15 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                 height: 40,
                 margin: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: kIndigo.withValues(alpha: 0.1),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.lock, color: kIndigo, size: 20),
+                child: Icon(Icons.lock, color: theme.colorScheme.primary, size: 20),
               ),
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                  color: kTextSecondary,
+                  color: theme.colorScheme.onSurfaceVariant,
                   size: 20,
                 ),
                 onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
@@ -458,26 +459,27 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: kIndigo, width: 2),
+                borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
               ),
             ),
+            style: TextStyle(fontSize: 14, color: theme.colorScheme.onSurface),
           ),
           if (_passwordAutoGenerated)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: kCyan.withValues(alpha: 0.1),
+                color: theme.colorScheme.secondary.withValues(alpha: 0.1),
                 borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.check_circle, color: kCyan, size: 16),
+                  Icon(Icons.check_circle, color: theme.colorScheme.secondary, size: 16),
                   const SizedBox(width: 8),
-                  const Text(
+                  Text(
                     'Password otomatis telah dibuat',
                     style: TextStyle(
                       fontSize: 11,
-                      color: kCyan,
+                      color: theme.colorScheme.secondary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -487,7 +489,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: kIndigo.withValues(alpha: 0.05),
+              color: theme.colorScheme.primary.withValues(alpha: 0.05),
               borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
             ),
             child: Row(
@@ -501,19 +503,19 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                         duration: const Duration(milliseconds: 150),
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                         decoration: BoxDecoration(
-                          color: kCyan.withValues(alpha: 0.1),
+                          color: theme.colorScheme.secondary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.autorenew, color: kCyan, size: 16),
+                            Icon(Icons.autorenew, color: theme.colorScheme.secondary, size: 16),
                             const SizedBox(width: 6),
                             Text(
                               'Generate Password',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: kCyan,
+                                color: theme.colorScheme.secondary,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -531,12 +533,12 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
     );
   }
 
-  Widget _buildRoleDropdown() {
+  Widget _buildRoleDropdown(ThemeData theme) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: kIndigo.withValues(alpha: 0.2)),
+        border: Border.all(color: AppTheme.kIndigo.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -549,8 +551,8 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
         initialValue: _selectedRole,
         decoration: InputDecoration(
           labelText: 'Role',
-          labelStyle: TextStyle(
-            color: kIndigo,
+          labelStyle: const TextStyle(
+            color: AppTheme.kIndigo,
             fontWeight: FontWeight.w600,
           ),
           border: InputBorder.none,
@@ -559,15 +561,15 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
             height: 40,
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: kIndigo.withValues(alpha: 0.1),
+              color: AppTheme.kIndigo.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(Icons.security, color: kIndigo, size: 20),
+            child: const Icon(Icons.security, color: AppTheme.kIndigo, size: 20),
           ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: kIndigo, width: 2),
+            borderSide: const BorderSide(color: AppTheme.kIndigo, width: 2),
           ),
         ),
         items: _roles.map((role) {
@@ -588,7 +590,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
     );
   }
 
-  Widget _buildCloseButton() {
+  Widget _buildCloseButton(ThemeData theme) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -608,6 +610,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
   }
 
   void _showSuccessWithAnimation() {
+    final theme = Theme.of(context);
     bool animationComplete = false;
     
     showGeneralDialog(
@@ -639,10 +642,11 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
                 side: BorderSide(
-                  color: kCyan.withValues(alpha: 0.3),
+                  color: AppTheme.kCyan.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
+              backgroundColor: theme.colorScheme.surface,
               contentPadding: EdgeInsets.zero,
               titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
               actionsPadding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
@@ -655,14 +659,14 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                     height: animationComplete ? 60 : 0,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [kCyan, kIndigo],
+                        colors: [AppTheme.kCyan, AppTheme.kIndigo],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(30),
                       boxShadow: [
                         BoxShadow(
-                          color: kCyan.withValues(alpha: 0.4),
+                          color: AppTheme.kCyan.withValues(alpha: 0.4),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -678,7 +682,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: kIndigo,
+                      color: AppTheme.kIndigo,
                     ),
                   ),
                 ],
@@ -694,15 +698,15 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            kIndigo.withValues(alpha: 0.1),
-                            kCyan.withValues(alpha: 0.1),
+                            AppTheme.kIndigo.withValues(alpha: 0.1),
+                            AppTheme.kCyan.withValues(alpha: 0.1),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: kIndigo.withValues(alpha: 0.2),
+                          color: AppTheme.kIndigo.withValues(alpha: 0.2),
                         ),
                       ),
                       child: Column(
@@ -710,14 +714,14 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.info_outline, color: kIndigo, size: 16),
+                              Icon(Icons.info_outline, color: AppTheme.kIndigo, size: 16),
                               const SizedBox(width: 6),
                               Text(
                                 'Password Baru',
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: kIndigo,
+                                  color: AppTheme.kIndigo,
                                 ),
                               ),
                             ],
@@ -727,10 +731,10 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: theme.cardColor,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: kCyan.withValues(alpha: 0.3),
+                                color: AppTheme.kCyan.withValues(alpha: 0.3),
                               ),
                             ),
                             child: Text(
@@ -739,7 +743,7 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 2,
-                                color: kIndigo,
+                                color: AppTheme.kIndigo,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -748,13 +752,13 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.content_copy, color: kCyan, size: 14),
+                              Icon(Icons.content_copy, color: AppTheme.kCyan, size: 14),
                               const SizedBox(width: 4),
                               Text(
                                 'Salin password ini',
                                 style: TextStyle(
                                   fontSize: 11,
-                                  color: kCyan,
+                                  color: AppTheme.kCyan,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -780,13 +784,13 @@ class _AddTeknisiFormState extends State<AddTeknisiForm> {
                           widget.onTeknisiAdded?.call();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: kIndigo,
+                          backgroundColor: AppTheme.kIndigo,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           elevation: animation.value < 0.5 ? 2 : 4,
-                          shadowColor: kIndigo.withValues(alpha: 0.4),
+                          shadowColor: AppTheme.kIndigo.withValues(alpha: 0.4),
                         ),
                         child: const Text(
                           'OK',

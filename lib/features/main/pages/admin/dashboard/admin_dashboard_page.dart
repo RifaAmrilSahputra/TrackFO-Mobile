@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../widgets/admin_components.dart';
+import 'package:trackfi/theme/app_theme.dart';
 
 /// Simple responsive grid wrapper to avoid horizontal overflow on small screens.
 class ResponsiveGrid extends StatelessWidget {
@@ -45,21 +46,12 @@ class ResponsiveGrid extends StatelessWidget {
 class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({super.key});
 
-  static const Color bg = Color(0xFFF8FAFF);
-  static const Color indigo = Color(0xFF4F46E5);
-  static const Color indigoLight = Color(0xFF818CF8);
-  static const Color cyan = Color(0xFF06B6D4);
-  static const Color lime = Color(0xFF10B981);
-  static const Color amber = Color(0xFFF59E0B);
-  static const Color rose = Color(0xFFF43F5E);
-  static const Color cardBg = Color(0xFFFFFFFF);
-  static const Color textPrimary = Color(0xFF1F2937);
-  static const Color textSecondary = Color(0xFF6B7280);
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: bg,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -72,28 +64,27 @@ class AdminDashboardPage extends StatelessWidget {
                 maxColumns: 3,
                 spacing: 12,
                 children: [
-                  StatCard('Total Users', '1,245', Icons.people, cyan),
-                  StatCard('Active Users', '312', Icons.flash_on, lime),
-                  StatCard('Reports', '27', Icons.warning, rose),
-                  StatCard('Dosen', '48', Icons.school, indigo),
-                  StatCard('Mahasiswa', '1.1K', Icons.groups, amber),
+                  StatCard('Total Users', '1,245', Icons.people, AppTheme.kCyan),
+                  StatCard('Active Users', '312', Icons.flash_on, AppTheme.kLime),
+                  StatCard('Reports', '27', Icons.warning, AppTheme.kRose),
+                  StatCard('Dosen', '48', Icons.school, AppTheme.kIndigo),
+                  StatCard('Mahasiswa', '1.1K', Icons.groups, AppTheme.kAmber),
                   StatCard(
                     'Blocked',
                     '5',
                     Icons.block,
-                    const Color(0xFFEF4444),
+                    AppTheme.kRose,
                   ),
                 ],
               ),
               const SizedBox(height: 24),
 
               // === CHARTS SECTION ===
-              const Text(
+              Text(
                 'Analytics',
-                style: TextStyle(
-                  fontSize: 18,
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: textPrimary,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 16),
@@ -105,12 +96,12 @@ class AdminDashboardPage extends StatelessWidget {
                   ChartCard(
                     'User Activity',
                     'Last 7 days',
-                    MiniLineChart(indigo),
+                    MiniLineChart(AppTheme.kIndigo),
                   ),
                   ChartCard(
                     'Reports Trend',
                     'Monthly overview',
-                    MiniLineChart(rose),
+                    MiniLineChart(AppTheme.kRose),
                   ),
                 ],
               ),
@@ -122,17 +113,17 @@ class AdminDashboardPage extends StatelessWidget {
                   ChartCard(
                     'Login Frequency',
                     'Daily average',
-                    MiniBarChart(cyan),
+                    MiniBarChart(AppTheme.kCyan),
                   ),
                   ChartCard(
                     'Growth Rate',
                     'Weekly progress',
-                    MiniBarChart(lime),
+                    MiniBarChart(AppTheme.kLime),
                   ),
                   ChartCard(
                     'Active Sessions',
                     'Current status',
-                    MiniDonutChart(amber),
+                    MiniDonutChart(AppTheme.kAmber),
                   ),
                 ],
               ),
@@ -142,21 +133,20 @@ class AdminDashboardPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Recent Activities',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
-                      color: textPrimary,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: const Text(
+                    child: Text(
                       'View All',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: indigo,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -166,11 +156,11 @@ class AdminDashboardPage extends StatelessWidget {
               const SizedBox(height: 16),
               Container(
                 decoration: BoxDecoration(
-                  color: cardBg,
+                  color: theme.cardColor,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha((0.05 * 255).round()),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     ),
@@ -183,28 +173,28 @@ class AdminDashboardPage extends StatelessWidget {
                       'New user registered',
                       'Budi Santoso just joined as Mahasiswa',
                       Icons.person_add,
-                      kCyan,
+                      AppTheme.kCyan,
                       '2 min ago',
                     ),
                     ActivityTile(
                       'Report submitted',
                       'New report from Siti Aminah',
                       Icons.report,
-                      kRose,
+                      AppTheme.kRose,
                       '15 min ago',
                     ),
                     ActivityTile(
                       'System backup',
                       'Automatic backup completed successfully',
                       Icons.backup,
-                      kLime,
+                      AppTheme.kLime,
                       '1 hour ago',
                     ),
                     ActivityTile(
                       'Admin login',
                       'Successful login from new device',
                       Icons.login,
-                      kIndigo,
+                      AppTheme.kIndigo,
                       '2 hours ago',
                     ),
                   ],
@@ -213,22 +203,22 @@ class AdminDashboardPage extends StatelessWidget {
               const SizedBox(height: 24),
 
               // === QUICK ACTIONS ===
-              const Text(
+              Text(
                 'Quick Actions',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: textPrimary,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 16),
               Container(
                 decoration: BoxDecoration(
-                  color: cardBg,
+                  color: theme.cardColor,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha((0.05 * 255).round()),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     ),
@@ -238,10 +228,10 @@ class AdminDashboardPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    QuickActionBtn(Icons.person_add, 'Add User', cyan),
-                    QuickActionBtn(Icons.edit, 'Manage', indigo),
-                    QuickActionBtn(Icons.analytics, 'Analytics', amber),
-                    QuickActionBtn(Icons.settings, 'Settings', lime),
+                    QuickActionBtn(Icons.person_add, 'Add User', AppTheme.kCyan),
+                    QuickActionBtn(Icons.edit, 'Manage', AppTheme.kIndigo),
+                    QuickActionBtn(Icons.analytics, 'Analytics', AppTheme.kAmber),
+                    QuickActionBtn(Icons.settings, 'Settings', AppTheme.kLime),
                   ],
                 ),
               ),
