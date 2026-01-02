@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import '../../../theme/app_theme.dart';
 
 /// Title block used inside Admin AppBar.
 class AdminHeaderTitle extends StatelessWidget {

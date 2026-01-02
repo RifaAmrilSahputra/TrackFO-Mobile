@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/auth_provider.dart';
-import '../../../theme/app_theme.dart';
 
 /// Komponen dialog konfirmasi logout yang dapat digunakan ulang.
 /// Tersedia dua jenis: untuk Admin dan untuk Teknisi.
@@ -37,8 +36,7 @@ class LogoutDialog {
   }) {
     final theme = Theme.of(context);
     final errorColor = theme.colorScheme.error;
-    final primaryColor = theme.colorScheme.primary;
-    
+
     showDialog(
       context: context,
       builder: (BuildContext context) {

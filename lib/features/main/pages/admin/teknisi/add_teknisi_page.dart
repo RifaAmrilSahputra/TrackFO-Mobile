@@ -237,9 +237,9 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppTheme.kError.withOpacity(0.1),
+                    color: AppTheme.kError.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppTheme.kError.withOpacity(0.3)),
+                    border: Border.all(color: AppTheme.kError.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [
@@ -286,7 +286,7 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                 decoration: BoxDecoration(
                   color: theme.cardTheme.color,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: theme.colorScheme.outline.withOpacity(0.3)),
+                border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.3)),
                 ),
                 child: DropdownButtonFormField<String>(
                   initialValue: _selectedRole,
@@ -327,7 +327,7 @@ class _AddTeknisiPageState extends State<AddTeknisiPage> {
                 decoration: BoxDecoration(
                   color: theme.cardTheme.color,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: theme.colorScheme.outline.withOpacity(0.3)),
+                  border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [

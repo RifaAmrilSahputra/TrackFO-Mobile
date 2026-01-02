@@ -236,13 +236,10 @@ class AppTheme {
       onError: Colors.white,
       errorContainer: kErrorContainer,
       onErrorContainer: kOnErrorContainer,
-      background: kLightBackground,
-      onBackground: kTextPrimaryLight,
-      surface: kLightSurface,
+      surface: kLightBackground,
       onSurface: kTextPrimaryLight,
-      surfaceVariant: kLightSurfaceVariant,
+      surfaceContainerHighest: kLightSurfaceVariant,
       onSurfaceVariant: kTextSecondaryLight,
-      surfaceContainerHighest: kLightSurfaceContainerHighest,
       outline: kLightOutline,
       outlineVariant: kLightBorder,
     );
@@ -438,23 +435,23 @@ class AppTheme {
         textColor: kTextPrimaryLight,
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return kIndigo;
           }
           return kLightSurfaceContainer;
         }),
-        trackColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return kIndigo.withAlpha(100);
           }
           return kLightSurfaceContainer;
         }),
       ),
       checkboxTheme: CheckboxThemeData(
-        checkColor: MaterialStateProperty.all(Colors.white),
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        checkColor: WidgetStateProperty.all(Colors.white),
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return kIndigo;
           }
           return Colors.transparent;
@@ -462,8 +459,8 @@ class AppTheme {
         side: const BorderSide(color: kLightBorder, width: 2),
       ),
       radioTheme: RadioThemeData(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return kIndigo;
           }
           return kLightBorder;
@@ -525,15 +522,14 @@ class AppTheme {
         selectionHandleColor: kIndigo,
       ),
       scrollbarTheme: ScrollbarThemeData(
-        thumbColor: MaterialStateProperty.all(kLightBorder),
-        trackColor: MaterialStateProperty.all(kLightSurfaceVariant),
-        trackBorderColor: MaterialStateProperty.all(kLightBorder),
-        thickness: MaterialStateProperty.all(6),
+        thumbColor: WidgetStateProperty.all(kLightBorder),
+        trackColor: WidgetStateProperty.all(kLightSurfaceVariant),
+        trackBorderColor: WidgetStateProperty.all(kLightBorder),
+        thickness: WidgetStateProperty.all(6),
         radius: const Radius.circular(3),
         crossAxisMargin: 2,
         mainAxisMargin: 4,
       ),
-      useMaterial3: true,
     );
   }
 
@@ -557,13 +553,10 @@ class AppTheme {
       onError: Color(0xFF7F1D1D),
       errorContainer: Color(0xFF7F1D1D),
       onErrorContainer: kErrorContainer,
-      background: kDarkBackground,
-      onBackground: kDarkOnSurface,
-      surface: kDarkSurface,
+      surface: kDarkBackground,
       onSurface: kDarkOnSurface,
-      surfaceVariant: kDarkSurfaceVariant,
+      surfaceContainerHighest: kDarkSurfaceVariant,
       onSurfaceVariant: kDarkOnSurfaceVariant,
-      surfaceContainerHighest: kDarkSurfaceContainerHighest,
       outline: kDarkOutline,
       outlineVariant: kDarkBorder,
     );
@@ -759,23 +752,23 @@ class AppTheme {
         textColor: kDarkOnSurface,
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return kIndigoLight;
           }
           return kDarkSurfaceContainer;
         }),
-        trackColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return kIndigoLight.withAlpha(100);
           }
           return kDarkSurfaceContainer;
         }),
       ),
       checkboxTheme: CheckboxThemeData(
-        checkColor: MaterialStateProperty.all(Colors.white),
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        checkColor: WidgetStateProperty.all(Colors.white),
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return kIndigoLight;
           }
           return Colors.transparent;
@@ -783,8 +776,8 @@ class AppTheme {
         side: BorderSide(color: kDarkBorder, width: 2),
       ),
       radioTheme: RadioThemeData(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return kIndigoLight;
           }
           return kDarkBorder;
@@ -846,15 +839,14 @@ class AppTheme {
         selectionHandleColor: kIndigoLight,
       ),
       scrollbarTheme: ScrollbarThemeData(
-        thumbColor: MaterialStateProperty.all(kDarkBorder),
-        trackColor: MaterialStateProperty.all(kDarkSurfaceContainer),
-        trackBorderColor: MaterialStateProperty.all(kDarkBorder),
-        thickness: MaterialStateProperty.all(6),
+        thumbColor: WidgetStateProperty.all(kDarkBorder),
+        trackColor: WidgetStateProperty.all(kDarkSurfaceContainer),
+        trackBorderColor: WidgetStateProperty.all(kDarkBorder),
+        thickness: WidgetStateProperty.all(6),
         radius: const Radius.circular(3),
         crossAxisMargin: 2,
         mainAxisMargin: 4,
       ),
-      useMaterial3: true,
     );
   }
 }

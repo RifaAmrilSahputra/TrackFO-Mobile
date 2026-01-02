@@ -1,3 +1,4 @@
+<parameter name="content">
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/providers/auth_provider.dart';
@@ -172,7 +173,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
                 }
 
                 if (teknisiProvider.hasError) {
-                  return _buildErrorState(teknisiProvider, theme);
+                  return _buildErrorState(context, teknisiProvider);
                 }
 
                 final filteredTeknisiList = _filterTeknisi(teknisiProvider.teknisiList);
@@ -180,10 +181,10 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
 
                 return Column(
                   children: [
-                    _buildHeader(theme, teknisiProvider, uniqueAreas),
+                    _buildHeader(context, teknisiProvider, uniqueAreas),
                     Expanded(
                       child: filteredTeknisiList.isEmpty
-                          ? _buildEmptyState(teknisiProvider, theme)
+                          ? _buildEmptyState(context, teknisiProvider)
                           : _buildTeknisiList(filteredTeknisiList),
                     ),
                   ],
@@ -196,7 +197,9 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
     );
   }
 
-  Widget _buildHeader(ThemeData theme, TeknisiProvider teknisiProvider, List<String> uniqueAreas) {
+  Widget _buildHeader(BuildContext context, TeknisiProvider teknisiProvider, List<String> uniqueAreas) {
+    final theme = Theme.of(context);
+
     return Container(
       margin: const EdgeInsets.all(16),
       child: Column(
@@ -243,7 +246,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
 
           // Search Bar
           Container(
@@ -290,101 +293,106 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
           // Filter & Sort Row
           Row(
             children: [
               Expanded(
-                child: _buildFilterDropdown(uniqueAreas),
+                child: _buildFilterDropdown(context, uniqueAreas),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: _buildSortDropdown(),
+                child: _buildSortDropdown(context),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
           // Results Info
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Menampilkan ${_filterTeknisi(teknisiProvider.teknisiList).length} teknisi',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              if (_selectedFilter != 'Semua' || _searchQuery.isNotEmpty)
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedFilter = 'Semua';
-                      _searchQuery = '';
-                      _searchController.clear();
-                      _sortBy = 'Nama';
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: AppTheme.kRose.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.clear, color: AppTheme.kRose, size: 12),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Reset',
-                          style: TextStyle(
-                            color: AppTheme.kRose,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+          Builder(
+            builder: (context) {
+              final filteredCount = _filterTeknisi(Provider.of<TeknisiProvider>(context, listen: false).teknisiList).length;
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Menampilkan $filteredCount teknisi',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                ),
-            ],
+                  if (_selectedFilter != 'Semua' || _searchQuery.isNotEmpty)
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedFilter = 'Semua';
+                          _searchQuery = '';
+                          _searchController.clear();
+                          _sortBy = 'Nama';
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppTheme.kRose.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.clear, color: AppTheme.kRose, size: 12),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Reset',
+                              style: TextStyle(
+                                color: AppTheme.kRose,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildFilterDropdown(List<String> uniqueAreas) {
+  Widget _buildFilterDropdown(BuildContext context, List<String> uniqueAreas) {
     final theme = Theme.of(context);
+
     return Container(
-      height: 42,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.15)),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: DropdownButtonFormField<String>(
-        isExpanded: true,
-        isDense: true,
-        initialValue: _selectedFilter,
+        value: _selectedFilter,
         icon: const Icon(Icons.keyboard_arrow_down, size: 18),
         decoration: const InputDecoration(
           border: InputBorder.none,
           icon: Icon(Icons.filter_list, color: AppTheme.kLime, size: 16),
           isDense: true,
-          contentPadding: EdgeInsets.zero,
         ),
         items: [
-          const DropdownMenuItem(value: 'Semua', child: Text('Semua', style: TextStyle(fontSize: 11))),
+          const DropdownMenuItem(value: 'Semua', child: Text('Semua Area')),
           ...uniqueAreas.map((area) => DropdownMenuItem(
             value: area,
-            child: Text(
-              area.length > 18 ? '${area.substring(0, 16)}...' : area,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 11),
+            child: SizedBox(
+              width: 100,
+              child: Text(
+                area.length > 14 ? '${area.substring(0, 12)}...' : area,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 11),
+              ),
             ),
           )),
         ],
@@ -393,26 +401,23 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
     );
   }
 
-  Widget _buildSortDropdown() {
+  Widget _buildSortDropdown(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
-      height: 42,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.15)),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: DropdownButtonFormField<String>(
-        isExpanded: true,
-        isDense: true,
-        initialValue: _sortBy,
+        value: _sortBy,
         icon: const Icon(Icons.keyboard_arrow_down, size: 18),
         decoration: const InputDecoration(
           border: InputBorder.none,
           icon: Icon(Icons.sort, color: AppTheme.kAmber, size: 16),
           isDense: true,
-          contentPadding: EdgeInsets.zero,
         ),
         items: const [
           DropdownMenuItem(value: 'Nama', child: Text('Nama', style: TextStyle(fontSize: 11))),
@@ -425,7 +430,9 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
     );
   }
 
-  Widget _buildErrorState(TeknisiProvider teknisiProvider, ThemeData theme) {
+  Widget _buildErrorState(BuildContext context, TeknisiProvider teknisiProvider) {
+    final theme = Theme.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -481,7 +488,9 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
     );
   }
 
-  Widget _buildEmptyState(TeknisiProvider teknisiProvider, ThemeData theme) {
+  Widget _buildEmptyState(BuildContext context, TeknisiProvider teknisiProvider) {
+    final theme = Theme.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -555,7 +564,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
       builder: (context, constraints) {
         final screenWidth = constraints.maxWidth;
         final crossAxisCount = screenWidth > 1200 ? 4 : screenWidth > 900 ? 3 : screenWidth > 600 ? 2 : 1;
-        final childAspectRatio = screenWidth > 1200 ? 0.9 : screenWidth > 900 ? 0.95 : screenWidth > 600 ? 1.2 : 1.6;
+        final childAspectRatio = screenWidth > 1200 ? 0.85 : screenWidth > 900 ? 0.95 : screenWidth > 600 ? 1.3 : 2.4;
 
         return RefreshIndicator(
           onRefresh: () async => await _teknisiProvider.fetchTeknisiData(),
@@ -563,7 +572,7 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
           child: CustomScrollView(
             slivers: [
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 sliver: SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
@@ -667,24 +676,24 @@ class ModernTeknisiCard extends StatelessWidget {
 
     return Material(
       color: theme.cardColor,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(16),
       elevation: 0,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.08)),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
               // Header Row
               Row(
                 children: [
+                  // Avatar
                   Container(
                     width: 40,
                     height: 40,
@@ -713,7 +722,7 @@ class ModernTeknisiCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          teknisi.name.length > 20 ? '${teknisi.name.substring(0, 18)}...' : teknisi.name,
+                          teknisi.name.length > 18 ? '${teknisi.name.substring(0, 16)}...' : teknisi.name,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
@@ -723,7 +732,7 @@ class ModernTeknisiCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          teknisi.email.length > 24 ? '${teknisi.email.substring(0, 22)}...' : teknisi.email,
+                          teknisi.email.length > 22 ? '${teknisi.email.substring(0, 20)}...' : teknisi.email,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                             fontSize: 11,
@@ -734,7 +743,8 @@ class ModernTeknisiCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  _buildMenuButton(theme),
+                  // Menu
+                  _buildMenuButton(context, theme),
                 ],
               ),
               const SizedBox(height: 12),
@@ -744,12 +754,12 @@ class ModernTeknisiCard extends StatelessWidget {
                 Row(
                   children: [
                     if (teknisi.phone != null)
-                      _buildInfoItem(Icons.phone, teknisi.phone!, theme),
+                      _buildInfoItem(Icons.phone, teknisi.phone!, context),
                     if (teknisi.phone != null && teknisi.areaKerja != null)
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 12),
                     if (teknisi.areaKerja != null)
                       Expanded(
-                        child: _buildInfoItem(Icons.location_on, teknisi.areaKerja!, theme),
+                        child: _buildInfoItem(Icons.location_on, teknisi.areaKerja!, context),
                       ),
                   ],
                 ),
@@ -759,19 +769,19 @@ class ModernTeknisiCard extends StatelessWidget {
               // Roles
               if (teknisi.roles.isNotEmpty)
                 Wrap(
-                  spacing: 5,
-                  runSpacing: 5,
+                  spacing: 4,
+                  runSpacing: 4,
                   children: teknisi.roles.take(2).map((role) {
                     return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: AppTheme.kIndigo.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         role.toLowerCase(),
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 9,
                           color: AppTheme.kIndigo,
                           fontWeight: FontWeight.w500,
                         ),
@@ -779,7 +789,7 @@ class ModernTeknisiCard extends StatelessWidget {
                     );
                   }).toList(),
                 ),
-              if (teknisi.roles.isNotEmpty) const SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // Footer
               Row(
@@ -792,15 +802,15 @@ class ModernTeknisiCard extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: AppTheme.kLime.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       'Aktif',
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 9,
                         color: AppTheme.kLime,
                         fontWeight: FontWeight.w600,
                       ),
@@ -815,7 +825,7 @@ class ModernTeknisiCard extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuButton(ThemeData theme) {
+  Widget _buildMenuButton(BuildContext context, ThemeData theme) {
     return PopupMenuButton<String>(
       onSelected: (value) {
         switch (value) {
@@ -852,24 +862,26 @@ class ModernTeknisiCard extends StatelessWidget {
       child: Icon(
         Icons.more_vert,
         color: theme.colorScheme.onSurfaceVariant,
-        size: 20,
+        size: 18,
       ),
     );
   }
 
-  Widget _buildInfoItem(IconData icon, String text, ThemeData theme) {
+  Widget _buildInfoItem(IconData icon, String text, BuildContext context) {
+    final theme = Theme.of(context);
+
     return Flexible(
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: icon == Icons.phone ? AppTheme.kCyan : AppTheme.kLime),
+          Icon(icon, size: 12, color: icon == Icons.phone ? AppTheme.kCyan : AppTheme.kLime),
           const SizedBox(width: 4),
           Expanded(
             child: Text(
-              text.length > 16 ? '${text.substring(0, 14)}...' : text,
+              text.length > 14 ? '${text.substring(0, 12)}...' : text,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
-                fontSize: 11,
+                fontSize: 10,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -909,6 +921,7 @@ class ModernTeknisiDetailSheet extends StatelessWidget {
           ),
           child: Column(
             children: [
+              // Handle
               Container(
                 margin: const EdgeInsets.only(top: 12, bottom: 8),
                 height: 4,
@@ -918,6 +931,8 @@ class ModernTeknisiDetailSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
+              
+              // Header
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
                 child: Row(
@@ -968,6 +983,8 @@ class ModernTeknisiDetailSheet extends StatelessWidget {
                   ],
                 ),
               ),
+              
+              // Content
               Expanded(
                 child: ListView(
                   controller: scrollController,
@@ -978,7 +995,7 @@ class ModernTeknisiDetailSheet extends StatelessWidget {
                       label: 'Telepon',
                       value: teknisi.phone ?? 'Tidak tersedia',
                       color: AppTheme.kCyan,
-                      theme: theme,
+                      context: context,
                     ),
                     const SizedBox(height: 12),
                     _buildInfoCard(
@@ -986,7 +1003,7 @@ class ModernTeknisiDetailSheet extends StatelessWidget {
                       label: 'Area Kerja',
                       value: teknisi.areaKerja ?? 'Tidak tersedia',
                       color: AppTheme.kLime,
-                      theme: theme,
+                      context: context,
                     ),
                     const SizedBox(height: 12),
                     _buildInfoCard(
@@ -994,7 +1011,7 @@ class ModernTeknisiDetailSheet extends StatelessWidget {
                       label: 'Alamat',
                       value: teknisi.alamat ?? 'Tidak tersedia',
                       color: AppTheme.kAmber,
-                      theme: theme,
+                      context: context,
                     ),
                     const SizedBox(height: 12),
                     _buildInfoCard(
@@ -1002,9 +1019,11 @@ class ModernTeknisiDetailSheet extends StatelessWidget {
                       label: 'Koordinat',
                       value: teknisi.koordinat ?? 'Tidak tersedia',
                       color: AppTheme.kRose,
-                      theme: theme,
+                      context: context,
                     ),
                     const SizedBox(height: 20),
+                    
+                    // Roles
                     Text(
                       'Role',
                       style: theme.textTheme.titleMedium?.copyWith(
@@ -1037,6 +1056,8 @@ class ModernTeknisiDetailSheet extends StatelessWidget {
                       }).toList(),
                     ),
                     const SizedBox(height: 20),
+                    
+                    // Registration Date
                     Text(
                       'Terdaftar',
                       style: theme.textTheme.titleMedium?.copyWith(
@@ -1066,8 +1087,10 @@ class ModernTeknisiDetailSheet extends StatelessWidget {
     required String label,
     required String value,
     required Color color,
-    required ThemeData theme,
+    required BuildContext context,
   }) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1123,4 +1146,4 @@ class ModernTeknisiDetailSheet extends StatelessWidget {
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 }
-
+</parameter>
