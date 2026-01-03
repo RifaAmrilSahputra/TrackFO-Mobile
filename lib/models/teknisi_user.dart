@@ -22,8 +22,10 @@ class TeknisiUser {
   });
 
   factory TeknisiUser.fromJson(Map<String, dynamic> json) {
+    // Handle both 'id' and '_id' (MongoDB format)
+    final idValue = json['id'] ?? json['_id'];
     return TeknisiUser(
-      id: json['id']?.toString() ?? '',
+      id: idValue?.toString() ?? '',
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       roles: (json['roles'] as List<dynamic>?)
@@ -35,7 +37,7 @@ class TeknisiUser {
       alamat: json['alamat'],
       koordinat: json['koordinat'],
       createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
+          ? DateTime.tryParse(json['createdAt'].toString()) ?? DateTime.now()
           : DateTime.now(),
     );
   }

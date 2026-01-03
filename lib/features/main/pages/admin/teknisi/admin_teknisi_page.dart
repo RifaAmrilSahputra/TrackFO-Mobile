@@ -622,22 +622,130 @@ class _AdminTeknisiPageState extends State<AdminTeknisiPage> {
   void _showDeleteConfirmation(TeknisiUser teknisi) {
     showDialog(
       context: context,
+      builder: (context) => _DeleteConfirmationDialog(
+        teknisi: teknisi,
+        onConfirm: () async {
+          Navigator.of(context).pop(); // Close dialog
+          await _performDelete(teknisi);
+        },
+      ),
+    );
+  }
+
+  Future<void> _performDelete(TeknisiUser teknisi) async {
+    // Show loading indicator
+    _showLoadingDialog();
+
+    try {
+      final success = await _teknisiProvider.deleteTeknisi(teknisi.id);
+
+      // Close loading dialog
+      if (mounted) Navigator.of(context).pop();
+
+      if (success) {
+        // Show success message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.check_circle, color: AppTheme.kLime, size: 18),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Teknisi ${teknisi.name} berhasil dihapus',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              backgroundColor: AppTheme.kLime,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.all(16),
+            ),
+          );
+        }
+      } else {
+        // Show error message
+        if (mounted) {
+          _showErrorDialog(_teknisiProvider.error ?? 'Gagal menghapus teknisi');
+        }
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (mounted) Navigator.of(context).pop();
+
+      // Show error message
+      if (mounted) {
+        _showErrorDialog(e.toString().replaceAll('Exception: ', ''));
+      }
+    }
+  }
+
+  void _showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Hapus Teknisi'),
-        content: Text('Apakah Anda yakin ingin menghapus ${teknisi.name}?'),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                valueColor: AlwaysStoppedAnimation<Color>(AppTheme.kIndigo),
+              ),
+            ),
+            const SizedBox(width: 16),
+            const Text('Menghapus teknisi...'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppTheme.kRose.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(Icons.error_outline, color: AppTheme.kRose),
+            ),
+            const SizedBox(width: 12),
+            const Text('Gagal'),
+          ],
+        ),
+        content: Text(message),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Batal'),
-          ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.kRose,
+              backgroundColor: AppTheme.kIndigo,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Hapus'),
+            child: const Text('Tutup'),
           ),
         ],
       ),
@@ -883,6 +991,144 @@ class ModernTeknisiCard extends StatelessWidget {
   String _formatDate(DateTime date) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+}
+
+/// Custom dialog for delete confirmation
+class _DeleteConfirmationDialog extends StatelessWidget {
+  final TeknisiUser teknisi;
+  final VoidCallback onConfirm;
+
+  const _DeleteConfirmationDialog({
+    required this.teknisi,
+    required this.onConfirm,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppTheme.kRose.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(Icons.warning_amber_rounded, color: AppTheme.kRose),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Hapus Teknisi', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                Text(
+                  'Tindakan ini tidak dapat dibatalkan',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppTheme.kIndigo, AppTheme.kCyan],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Text(
+                      teknisi.name.isNotEmpty ? teknisi.name.substring(0, 1).toUpperCase() : '?',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        teknisi.name.length > 24 ? '${teknisi.name.substring(0, 22)}...' : teknisi.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        teknisi.email.length > 30 ? '${teknisi.email.substring(0, 28)}...' : teknisi.email,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Apakah Anda yakin ingin menghapus teknisi ${teknisi.name}? Semua data terkait teknisi ini akan dihapus permanen.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(
+            'Batal',
+            style: TextStyle(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: onConfirm,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.kRose,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          ),
+          child: const Text(
+            'Ya, Hapus',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+      ],
+      actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+    );
   }
 }
 

@@ -77,7 +77,7 @@ class TeknisiService {
   /// Mendapatkan teknisi berdasarkan ID
   Future<TeknisiUser> getTeknisiById(String id) async {
     try {
-      final res = await _dio.get('/users/teknisi/$id');
+      final res = await _dio.get('/users/$id');
 
       final data = res.data;
 
@@ -174,7 +174,7 @@ class TeknisiService {
   /// Memperbarui data teknisi
   Future<TeknisiUser> updateTeknisi(String id, Map<String, dynamic> teknisiData) async {
     try {
-      final res = await _dio.put('/users/teknisi/$id', data: teknisiData);
+      final res = await _dio.put('/users/$id', data: teknisiData);
 
       final data = res.data;
 
@@ -225,7 +225,8 @@ class TeknisiService {
   /// Menghapus teknisi
   Future<bool> deleteTeknisi(String id) async {
     try {
-      final res = await _dio.delete('/users/teknisi/$id');
+      // Coba endpoint /users/:id (tanpa /teknisi)
+      final res = await _dio.delete('/users/$id');
 
       final data = res.data;
 
